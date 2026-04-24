@@ -396,40 +396,41 @@ const ROUTE = [
     desc: "Финиш. Рядом — Пушкинская площадь и метро. Если ещё есть силы — до сада «Эрмитаж» 10 минут пешком." }
 ];
 
+const wm = (path) => `https://images.weserv.nl/?url=upload.wikimedia.org/wikipedia/commons/${path}&w=800&h=450&fit=cover&output=jpg`;
 const IMAGES = {
-  1:  'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/Multimedia_Art_Museum%2C_Moscow_2022_May.jpg/800px-Multimedia_Art_Museum%2C_Moscow_2022_May.jpg',
-  2:  'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0a/Moscow%2C_Ostozhenka_3-14_Apr_2009_frontal_04.JPG/800px-Moscow%2C_Ostozhenka_3-14_Apr_2009_frontal_04.JPG',
-  3:  'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c6/Moscow_ZachatyevskyConventCathedral_C35.jpg/800px-Moscow_ZachatyevskyConventCathedral_C35.jpg',
-  4:  'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d0/Moscow%2C_Khilkov_2C3_2008_01.JPG/800px-Moscow%2C_Khilkov_2C3_2008_01.JPG',
-  5:  'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d0/Moscow%2C_Ostozhenka_12-1_Mar_2009_04.JPG/800px-Moscow%2C_Ostozhenka_12-1_Mar_2009_04.JPG',
-  6:  'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/Prechistenka_pushkin_museum_corner.jpg/800px-Prechistenka_pushkin_museum_corner.jpg',
-  7:  'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e6/Iaskov_House_view.jpg/800px-Iaskov_House_view.jpg',
-  8:  'https://upload.wikimedia.org/wikipedia/ru/c/c4/%D0%9F%D0%B0%D0%BC%D1%8F%D1%82%D0%BD%D0%B8%D0%BA_%D0%A8%D0%BE%D0%BB%D0%BE%D1%85%D0%BE%D0%B2%D1%83_%28%D0%9C%D0%BE%D1%81%D0%BA%D0%B2%D0%B0%2C_%D0%93%D0%BE%D0%B3%D0%BE%D0%BB%D0%B5%D0%B2%D1%81%D0%BA%D0%B8%D0%B9_%D0%B1%D1%83%D0%BB%D1%8C%D0%B2%D0%B0%D1%80%29._%D0%9F%D0%B8%D1%81%D0%B0%D1%82%D0%B5%D0%BB%D1%8C.jpg',
-  9:  'https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/Gogolevsky_boulevard_shot_02.jpg/800px-Gogolevsky_boulevard_shot_02.jpg',
-  10: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2b/Moscow%2C_Chertolsky_2_Apr_2009_07.JPG/800px-Moscow%2C_Chertolsky_2_Apr_2009_07.JPG',
-  11: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ab/Sivtsev_Vrazhek_Lane_20230725_122505.jpg/800px-Sivtsev_Vrazhek_Lane_20230725_122505.jpg',
-  12: 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/75/Moscow%2C_Gagarinsky_11.jpg/800px-Moscow%2C_Gagarinsky_11.jpg',
-  13: 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/73/Moscow%2C_Starokonyushenny_20.jpg/800px-Moscow%2C_Starokonyushenny_20.jpg',
-  14: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/37/Melnikov_House%2C_May_2021.jpg/800px-Melnikov_House%2C_May_2021.jpg',
-  15: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/fa/Moscow_BNikolopeskovsky11_asv2018-09.jpg/800px-Moscow_BNikolopeskovsky11_asv2018-09.jpg',
-  16: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/58/Arbat_District%2C_Moscow%2C_Russia_-_panoramio_%2866%29.jpg/800px-Arbat_District%2C_Moscow%2C_Russia_-_panoramio_%2866%29.jpg',
-  17: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/55/Povarskaya_Street_52.jpg/800px-Povarskaya_Street_52.jpg',
-  18: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/30/Moscow%2C_Skatertny_Lane.jpg/800px-Moscow%2C_Skatertny_Lane.jpg',
-  19: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/01/Moscow%2C_Khlebny_Lane.jpg/800px-Moscow%2C_Khlebny_Lane.jpg',
-  20: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0d/%D0%9E%D1%81%D0%BE%D0%B1%D0%BD%D1%8F%D0%BA_%D0%A0%D1%8F%D0%B1%D1%83%D1%88%D0%B8%D0%BD%D1%81%D0%BA%D0%BE%D0%B3%D0%BE02.JPG/800px-%D0%9E%D1%81%D0%BE%D0%B1%D0%BD%D1%8F%D0%BA_%D0%A0%D1%8F%D0%B1%D1%83%D1%88%D0%B8%D0%BD%D1%81%D0%BA%D0%BE%D0%B3%D0%BE02.JPG',
-  21: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/fe/Moscow%2C_Bolshaya_Nikitskaya_36_01.jpg/800px-Moscow%2C_Bolshaya_Nikitskaya_36_01.jpg',
-  22: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/Nikolay_Gogol_01.JPG/800px-Nikolay_Gogol_01.JPG',
-  23: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/East_nations_art_museum_in_Moscow_shot_01.jpg/800px-East_nations_art_museum_in_Moscow_shot_01.jpg',
-  24: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/45/Moscow_05-2017_img41_Conservatory.jpg/800px-Moscow_05-2017_img41_Conservatory.jpg',
-  25: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/Bolshaya_Nikitskaya_roof.jpg/800px-Bolshaya_Nikitskaya_roof.jpg',
-  26: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0d/Moscow%2C_Bryusov_Lane.jpg/800px-Moscow%2C_Bryusov_Lane.jpg',
-  27: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/94/Moscow%2C_Leontievsky_lane_2-26_str_1_%282013%29_by_shakko_01.jpg/800px-Moscow%2C_Leontievsky_lane_2-26_str_1_%282013%29_by_shakko_01.jpg',
-  28: 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/84/Moscow%2C_B._Dmitrovka%2C_15_-_RGASPI_%28view_from_Tverskaya%29_2010s%2C_by_shakko_01.jpg/800px-Moscow%2C_B._Dmitrovka%2C_15_-_RGASPI_%28view_from_Tverskaya%29_2010s%2C_by_shakko_01.jpg',
-  29: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/%D0%94%D0%BE%D0%BC_%D0%9D%D0%B8%D1%80%D0%BD%D0%B7%D0%B5%D0%B5_2.JPG/800px-%D0%94%D0%BE%D0%BC_%D0%9D%D0%B8%D1%80%D0%BD%D0%B7%D0%B5%D0%B5_2.JPG',
-  30: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/28/On_Tverskoy_Boulevard%2C_Moscow_in_autumn.JPG/800px-On_Tverskoy_Boulevard%2C_Moscow_in_autumn.JPG',
-  31: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ab/Moscow%2C_M-Gnezdnikovsky_7_Aug_2024_01.jpg/800px-Moscow%2C_M-Gnezdnikovsky_7_Aug_2024_01.jpg',
-  32: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b4/GeorgievskyPereulokMoscow.jpg/800px-GeorgievskyPereulokMoscow.jpg',
-  33: 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7f/%D0%A1%D1%82%D1%80%D0%B0%D1%81%D1%82%D0%BD%D0%BE%D0%B9_%D0%B1%D1%83%D0%BB%D1%8C%D0%B2%D0%B0%D1%80_%28Strastnoy_Boulevard%29%2C_%D0%9C%D0%BE%D1%81%D0%BA%D0%B2%D0%B0_04.jpg/800px-%D0%A1%D1%82%D1%80%D0%B0%D1%81%D1%82%D0%BD%D0%BE%D0%B9_%D0%B1%D1%83%D0%BB%D1%8C%D0%B2%D0%B0%D1%80_%28Strastnoy_Boulevard%29%2C_%D0%9C%D0%BE%D1%81%D0%BA%D0%B2%D0%B0_04.jpg'
+  1:  wm('e/e8/Multimedia_Art_Museum%2C_Moscow_2022_May.jpg'),
+  2:  wm('0/0a/Moscow%2C_Ostozhenka_3-14_Apr_2009_frontal_04.JPG'),
+  3:  wm('c/c6/Moscow_ZachatyevskyConventCathedral_C35.jpg'),
+  4:  wm('d/d0/Moscow%2C_Khilkov_2C3_2008_01.JPG'),
+  5:  wm('d/d0/Moscow%2C_Ostozhenka_12-1_Mar_2009_04.JPG'),
+  6:  wm('a/a3/Prechistenka_pushkin_museum_corner.jpg'),
+  7:  wm('e/e6/Iaskov_House_view.jpg'),
+  8:  wm('4/46/Gogolevsky_boulevard_shot_02.jpg'),
+  9:  wm('4/46/Gogolevsky_boulevard_shot_02.jpg'),
+  10: wm('2/2b/Moscow%2C_Chertolsky_2_Apr_2009_07.JPG'),
+  11: wm('a/ab/Sivtsev_Vrazhek_Lane_20230725_122505.jpg'),
+  12: wm('7/75/Moscow%2C_Gagarinsky_11.jpg'),
+  13: wm('7/73/Moscow%2C_Starokonyushenny_20.jpg'),
+  14: wm('3/37/Melnikov_House%2C_May_2021.jpg'),
+  15: wm('f/fa/Moscow_BNikolopeskovsky11_asv2018-09.jpg'),
+  16: wm('5/58/Arbat_District%2C_Moscow%2C_Russia_-_panoramio_%2866%29.jpg'),
+  17: wm('5/55/Povarskaya_Street_52.jpg'),
+  18: wm('3/30/Moscow%2C_Skatertny_Lane.jpg'),
+  19: wm('0/01/Moscow%2C_Khlebny_Lane.jpg'),
+  20: wm('0/0d/%D0%9E%D1%81%D0%BE%D0%B1%D0%BD%D1%8F%D0%BA_%D0%A0%D1%8F%D0%B1%D1%83%D1%88%D0%B8%D0%BD%D1%81%D0%BA%D0%BE%D0%B3%D0%BE02.JPG'),
+  21: wm('f/fe/Moscow%2C_Bolshaya_Nikitskaya_36_01.jpg'),
+  22: wm('9/9a/Nikolay_Gogol_01.JPG'),
+  23: wm('4/4d/East_nations_art_museum_in_Moscow_shot_01.jpg'),
+  24: wm('4/45/Moscow_05-2017_img41_Conservatory.jpg'),
+  25: wm('e/ec/Bolshaya_Nikitskaya_roof.jpg'),
+  26: wm('0/0d/Moscow%2C_Bryusov_Lane.jpg'),
+  27: wm('9/94/Moscow%2C_Leontievsky_lane_2-26_str_1_%282013%29_by_shakko_01.jpg'),
+  28: wm('8/84/Moscow%2C_B._Dmitrovka%2C_15_-_RGASPI_%28view_from_Tverskaya%29_2010s%2C_by_shakko_01.jpg'),
+  29: wm('e/e1/%D0%94%D0%BE%D0%BC_%D0%9D%D0%B8%D1%80%D0%BD%D0%B7%D0%B5%D0%B5_2.JPG'),
+  30: wm('2/28/On_Tverskoy_Boulevard%2C_Moscow_in_autumn.JPG'),
+  31: wm('a/ab/Moscow%2C_M-Gnezdnikovsky_7_Aug_2024_01.jpg'),
+  32: wm('b/b4/GeorgievskyPereulokMoscow.jpg'),
+  33: wm('7/7f/%D0%A1%D1%82%D1%80%D0%B0%D1%81%D1%82%D0%BD%D0%BE%D0%B9_%D0%B1%D1%83%D0%BB%D1%8C%D0%B2%D0%B0%D1%80_%28Strastnoy_Boulevard%29%2C_%D0%9C%D0%BE%D1%81%D0%BA%D0%B2%D0%B0_04.jpg')
 };
 
 const cards = document.getElementById('cards');
@@ -439,7 +440,7 @@ ROUTE.forEach((p, i) => {
   card.id = 'p' + p.n;
   const img = IMAGES[p.n];
   card.innerHTML = `
-    ${img ? `<div class="photo"><img src="${img}" alt="${p.name}" loading="lazy" referrerpolicy="no-referrer"></div>` : ''}
+    ${img ? `<div class="photo"><img src="${img}" alt="${p.name}" loading="lazy"></div>` : ''}
     <div class="card-inner">
       <div class="num">${p.n}</div>
       <div class="body">
