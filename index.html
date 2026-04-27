@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Выходной променад · МАММ → Страстной бульвар</title>
+<title>Первомайский Променад · Чтиво → Страстной</title>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
   integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
 <style>
@@ -12,7 +12,8 @@
     --ink: #2a2a2a;
     --muted: #6b6b6b;
     --accent: #c0392b;
-    --bonus: #3a7d44;
+    --branch-a: #3a7d44;
+    --branch-b: #c8782b;
     --card: #ffffff;
     --line: #e4dfd5;
   }
@@ -30,10 +31,14 @@
   header.hero .sub { font-size: 15px; color: var(--muted); margin-bottom: 14px; }
   header.hero .stats { display: flex; gap: 18px; font-size: 13px; color: var(--muted); flex-wrap: wrap; }
   header.hero .stats b { color: var(--ink); font-weight: 600; }
-  header.hero .legend { margin-top: 10px; display: flex; gap: 16px; font-size: 12px; color: var(--muted); }
-  header.hero .legend .dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 6px; vertical-align: middle; }
-  header.hero .legend .r { background: var(--accent); }
-  header.hero .legend .g { background: var(--bonus); }
+
+  .timing {
+    background: #fbf5e9; border: 1px solid #ebe0c7; border-radius: 10px;
+    padding: 14px 16px; margin-bottom: 20px; font-size: 13px; color: #6e5e2a;
+  }
+  .timing b { color: #4d3f15; }
+  .timing ul { margin: 6px 0 0; padding-left: 18px; }
+  .timing li { margin-bottom: 2px; }
 
   .card {
     background: var(--card);
@@ -41,16 +46,20 @@
     border-radius: 14px;
     margin-bottom: 18px;
     scroll-margin-top: 20px;
-    transition: border-color .15s, box-shadow .15s, transform .15s;
+    transition: border-color .15s, box-shadow .15s, opacity .25s;
     overflow: hidden;
   }
   .card:target, .card.active {
     border-color: var(--accent);
     box-shadow: 0 4px 20px rgba(192, 57, 43, 0.18);
   }
-  .card.bonus:target, .card.bonus.active {
-    border-color: var(--bonus);
+  .card.branch-a:target, .card.branch-a.active {
+    border-color: var(--branch-a);
     box-shadow: 0 4px 20px rgba(58, 125, 68, 0.18);
+  }
+  .card.branch-b:target, .card.branch-b.active {
+    border-color: var(--branch-b);
+    box-shadow: 0 4px 20px rgba(200, 120, 43, 0.18);
   }
   .card .photo {
     position: relative;
@@ -80,9 +89,10 @@
     flex: 0 0 38px; height: 38px; border-radius: 50%;
     background: var(--accent); color: #fff;
     display: flex; align-items: center; justify-content: center;
-    font-size: 15px; font-weight: 700;
+    font-size: 14px; font-weight: 700;
   }
-  .card.bonus .num { background: var(--bonus); }
+  .card.branch-a .num { background: var(--branch-a); }
+  .card.branch-b .num { background: var(--branch-b); }
   .card .body { flex: 1; min-width: 0; }
   .card h2 { margin: 2px 0 6px; font-size: 18px; font-weight: 600; letter-spacing: -0.01em; }
   .card p { margin: 0 0 8px; font-size: 15px; color: #3a3a3a; }
@@ -90,7 +100,8 @@
   .card .tag {
     color: var(--accent); text-transform: uppercase; letter-spacing: 0.04em; font-weight: 600;
   }
-  .card.bonus .tag { color: var(--bonus); }
+  .card.branch-a .tag { color: var(--branch-a); }
+  .card.branch-b .tag { color: var(--branch-b); }
   .card .show-map {
     background: transparent; border: 1px solid var(--line); border-radius: 6px;
     padding: 4px 10px; font-size: 12px; cursor: pointer; color: var(--muted);
@@ -98,16 +109,47 @@
   }
   .card .show-map:hover { color: var(--ink); border-color: #bbb; }
 
-  .pre-note {
-    background: #fbf5e9; border: 1px solid #ebe0c7; border-radius: 10px;
-    padding: 14px 16px; margin-bottom: 20px; font-size: 14px; color: #6e5e2a;
+  .branch-selector {
+    background: linear-gradient(180deg, #fff 0%, #faf7f1 100%);
+    border: 2px dashed #c4b89c;
+    border-radius: 14px;
+    padding: 22px 20px;
+    margin-bottom: 18px;
+    text-align: center;
   }
-  .pre-note b { color: #4d3f15; }
+  .branch-selector h3 { margin: 0 0 8px; font-size: 18px; font-weight: 700; }
+  .branch-selector .sub { color: var(--muted); font-size: 14px; margin-bottom: 18px; }
+  .branch-buttons { display: flex; gap: 12px; }
+  .branch-buttons button {
+    flex: 1; padding: 16px 14px; border: 2px solid var(--line);
+    background: #fff; border-radius: 12px; cursor: pointer;
+    text-align: left; transition: all .15s;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .branch-buttons button:hover { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(0,0,0,.08); }
+  .branch-buttons .b-a:hover { border-color: var(--branch-a); }
+  .branch-buttons .b-b:hover { border-color: var(--branch-b); }
+  .branch-buttons button .icon { font-size: 24px; display: block; margin-bottom: 6px; }
+  .branch-buttons button .name { font-size: 15px; font-weight: 700; display: block; margin-bottom: 4px; }
+  .branch-buttons .b-a .name { color: var(--branch-a); }
+  .branch-buttons .b-b .name { color: var(--branch-b); }
+  .branch-buttons button .desc { font-size: 12px; color: var(--muted); line-height: 1.35; }
+  .branch-buttons button .meta { font-size: 11px; color: var(--muted); margin-top: 6px; text-transform: uppercase; letter-spacing: 0.05em; }
 
-  .section-title {
-    margin: 30px 0 12px; font-size: 12px; font-weight: 700;
-    text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted);
+  .branch-active {
+    display: flex; align-items: center; gap: 10px;
+    padding: 12px 16px; margin-bottom: 14px;
+    border-radius: 10px; font-size: 13px;
   }
+  .branch-active.branch-a { background: rgba(58, 125, 68, 0.08); color: var(--branch-a); }
+  .branch-active.branch-b { background: rgba(200, 120, 43, 0.08); color: var(--branch-b); }
+  .branch-active b { font-weight: 700; }
+  .branch-active button {
+    margin-left: auto; background: transparent; border: 1px solid currentColor;
+    color: inherit; padding: 4px 10px; border-radius: 6px;
+    font-size: 12px; cursor: pointer; opacity: 0.8;
+  }
+  .branch-active button:hover { opacity: 1; }
 
   #map-widget {
     position: fixed;
@@ -154,18 +196,15 @@
   .widget-btns button:hover { background: #eee; color: var(--ink); }
   #map { width: 100%; height: calc(100% - 32px); }
 
-  .leaflet-marker-icon .num-marker {
-    width: 26px; height: 26px;
-    background: var(--accent); color: #fff; border: 2px solid #fff;
+  .leaflet-marker-icon .pin {
+    width: 28px; height: 28px; color: #fff; border: 2px solid #fff;
     border-radius: 50%; display: flex; align-items: center; justify-content: center;
-    font-weight: 600; font-size: 12px; box-shadow: 0 2px 6px rgba(0,0,0,.25);
+    font-weight: 700; font-size: 12px; box-shadow: 0 2px 6px rgba(0,0,0,.25);
   }
-  .leaflet-marker-icon .bonus-marker {
-    width: 24px; height: 24px;
-    background: var(--bonus); color: #fff; border: 2px solid #fff;
-    border-radius: 50%; display: flex; align-items: center; justify-content: center;
-    font-weight: 600; font-size: 12px; box-shadow: 0 2px 6px rgba(0,0,0,.25);
-  }
+  .leaflet-marker-icon .pin.prefix { background: var(--accent); }
+  .leaflet-marker-icon .pin.branch-a { background: var(--branch-a); }
+  .leaflet-marker-icon .pin.branch-b { background: var(--branch-b); }
+  .leaflet-marker-icon.faded { opacity: 0.35; }
   .leaflet-popup-content { font-size: 13px; line-height: 1.45; margin: 10px 14px !important; }
   .leaflet-popup-content b { display: block; margin-bottom: 4px; font-size: 14px; }
 
@@ -185,30 +224,32 @@
       width: 44px; height: 44px; left: auto;
     }
     .card-inner { padding: 14px 16px; }
-    .card .num { flex: 0 0 34px; height: 34px; font-size: 14px; }
+    .card .num { flex: 0 0 34px; height: 34px; font-size: 13px; }
     .card h2 { font-size: 16px; }
     .card p { font-size: 14px; }
+    .branch-buttons { flex-direction: column; }
   }
 </style>
 </head>
 <body>
 <div class="wrap">
   <header class="hero">
-    <h1>Выходной променад</h1>
-    <div class="sub">МАММ → Страстной бульвар, 12к1 · по переулкам вместо бульваров</div>
+    <h1>Первомайский Променад</h1>
+    <div class="sub">Чтиво Дом → Страстной бульвар, 12к1 · с развилкой после МАММ</div>
     <div class="stats">
-      <span><b>~4 км</b> пешком</span>
-      <span><b>1,5–2 ч</b> чистого хода</span>
-      <span><b>34 точки</b> в маршруте</span>
-    </div>
-    <div class="legend">
-      <span><span class="dot r"></span>основная точка</span>
-      <span><span class="dot g"></span>инсайдерская (для своих)</span>
+      <span><b>4 часа</b> с кино и баром</span>
+      <span><b>~5 км</b> пешком</span>
     </div>
   </header>
 
-  <div class="pre-note">
-    <b>До старта.</b> Если едешь на метро — выходи на <b>Кропоткинской</b>. От выхода к МАММ по пути загляни к <b>A. Дому Перцовой</b> (Соймоновский 1) — сказочный терем в стиле модерн с драконами и русалками, построен в 1907.
+  <div class="timing">
+    <b>Тайминг:</b>
+    <ul>
+      <li><b>13:00</b> — кино «Гуру» в Чтиво Дом</li>
+      <li><b>~15:00</b> — выход, дворик 32/1, кафе Коншиной (⚠️ до 15:30)</li>
+      <li><b>~16:00</b> — МАММ + развилка</li>
+      <li><b>~18:00</b> — финиш на Страстном 12к1</li>
+    </ul>
   </div>
 
   <div id="cards"></div>
@@ -229,215 +270,141 @@
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
   integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 <script>
-const ROUTE = [
-  { n: 1,  main: true,  lat: 55.7385, lng: 37.5970,
+const PREFIX = [
+  { n: 1, lat: 55.7355, lng: 37.5870,
+    name: "Чтиво Дом · кино «Гуру»",
+    tag: "🎬 13:00",
+    desc: "Метро Парк Культуры. Сеанс в 13:00, фильм «Гуру». Билеты заранее. После выхода — на север по ул. Льва Толстого к Пречистенке." },
+
+  { n: 2, lat: 55.7395, lng: 37.5885,
+    name: "Дворик Пречистенка, 32/1 с1",
+    tag: "🌿 двор",
+    desc: "Угловой дом в самом начале Пречистенки. Заходим во двор через арку — первый «вход в тему» после кино. 5–10 минут." },
+
+  { n: 3, lat: 55.7460, lng: 37.5985,
+    name: "Кафе в особняке Коншиной",
+    tag: "☕ до 15:30!",
+    desc: "Пречистенка 14/1 с4. Бывший особняк А. И. Коншиной (А. О. Гунст, 1908–1910). Мраморная лестница, лепнина, зимний сад с пальмами. ⚠️ Закрывается в 15:30 — успеть до 15:15. Чашка чая + 5 минут осмотра." },
+
+  { n: 4, lat: 55.7385, lng: 37.5970,
     name: "МАММ — Мультимедиа Арт Музей",
-    tag: "старт",
-    desc: "Остоженка, 16. Старт маршрута. Билеты лучше заранее на mamm-mdf.ru. После выставок выходим направо вдоль Остоженки в сторону центра." },
-
-  { n: 2,  bonus: "B", lat: 55.7380, lng: 37.5997,
-    name: "Дом под рюмкой",
-    tag: "легенда",
-    desc: "1-й Зачатьевский пер., 11. Доходный дом с башенкой в форме перевёрнутой рюмки. По легенде купец Филатов завязал с пьянством и построил дом сыну в назидание. Заходим мимо по пути к монастырю." },
-
-  { n: 3,  main: true,  lat: 55.7373, lng: 37.6005,
-    name: "Зачатьевский монастырь",
-    tag: "обязательно",
-    desc: "2-й Зачатьевский пер., 2. Старейший женский монастырь Москвы (1360). Тихий двор с розами, почти без туристов. Заглянуть минут на 10." },
-
-  { n: 4,  main: true,  lat: 55.7398, lng: 37.5957,
-    name: "Хилков переулок",
-    tag: "переулки",
-    desc: "Возвращаемся на Остоженку и ныряем в узкие переулки Золотой мили. Хилков — дом Кекушева в стиле модерн, тихие старые дворы." },
-
-  { n: 5,  main: true,  lat: 55.7422, lng: 37.5972,
-    name: "Всеволожский переулок",
-    tag: "дворики",
-    desc: "Конструктивизм и доходные дома. Каштаны, ржавые подъезды, старые таблички. Идём в сторону Пречистенки." },
-
-  { n: 6,  main: true,  lat: 55.7418, lng: 37.5995,
-    name: "Лопухинский переулок",
-    tag: "переулки",
-    desc: "Выход на Пречистенку. Здесь же — бывший особняк Лопухиных XVIII века." },
-
-  { n: 7,  bonus: "C", lat: 55.7443, lng: 37.5918,
-    name: "Особняк Исакова (Пречистенка 28)",
-    tag: "модерн",
-    desc: "Шедевр Льва Кекушева (1906). Зайти во двор — там сохранилась дворовая часть фасада с фантазийной пластикой, которой с улицы не видно." },
-
-  { n: 8,  bonus: "D", lat: 55.7458, lng: 37.6030,
-    name: "«Тонущие кони» — памятник Шолохову",
-    tag: "спорный",
-    desc: "Гоголевский бульвар, у Пречистенских Ворот. Писатель в лодке, за ним в гранитной «воде» плывут лошади. Москвичи делятся на тех, кто любит, и тех, кто ненавидит — равнодушных нет." },
-
-  { n: 9,  bonus: "E", lat: 55.7476, lng: 37.6032,
-    name: "Дом с рыцарями",
-    tag: "архитектура",
-    desc: "Гоголевский бульвар, 10. Доходный дом Грачёвой (1902), неоготика. В нишах — фигуры рыцарей. Одно из самых любимых москвичами зданий на бульварах." },
-
-  { n: 10, main: true, lat: 55.7442, lng: 37.6007,
-    name: "Чертольский переулок",
-    tag: "переулки",
-    desc: "Возвращаемся с бульвара в переулки. Чертольский — одно из самых древних топонимов Москвы. Ведёт в литературные переулки Пречистенки." },
-
-  { n: 11, main: true, lat: 55.7462, lng: 37.5958,
-    name: "Сивцев Вражек",
-    tag: "обязательно",
-    desc: "Самый атмосферный переулок Москвы: особняки XIX в., «Дом с рыцарями» (другой, московский), литературные квартиры. По нему можно гулять бесконечно." },
-
-  { n: 12, main: true, lat: 55.7462, lng: 37.5988,
-    name: "Гагаринский переулок",
-    tag: "дворики",
-    desc: "Деревянные особнячки, дом Штейнгеля. Один из немногих уголков центра, где ощущение старой Москвы ещё сохранилось." },
-
-  { n: 13, main: true, lat: 55.7478, lng: 37.5935,
-    name: "Староконюшенный",
-    tag: "переулки",
-    desc: "Деревянный особняк Пороховщикова — один из последних деревянных домов в пределах Бульварного кольца." },
-
-  { n: 14, bonus: "F", lat: 55.7490, lng: 37.5917,
-    name: "Дом Мельникова",
-    tag: "must-see",
-    desc: "Кривоарбатский пер., 10. Круглый дом-мастерская архитектора-конструктивиста Мельникова (1929). Единственный в мире в таком типе. Внутрь — только по предварительной записи на сайте Музея архитектуры. Даже снаружи — впечатляюще." },
-
-  { n: 15, bonus: "G", lat: 55.7500, lng: 37.5900,
-    name: "Музей Скрябина",
-    tag: "музей",
-    desc: "Большой Николопесковский пер., 11. Квартира композитора в идеальной сохранности: мебель, рояль, цветомузыкальная установка «Прометей». Тихо, почти никого. Закладывай 40 минут." },
-
-  { n: 16, main: true, lat: 55.7520, lng: 37.6000,
-    name: "Арбатская площадь",
-    tag: "ориентир",
-    desc: "Перекрёсток маршрутов. Сейчас здесь можно сделать первую кофе-паузу — ищи местечко в арбатских переулках, без вывесок «Кофемания»/«Шоколадница»." },
-
-  { n: 17, main: true, lat: 55.7569, lng: 37.5893,
-    name: "Дом Ростовых (ЦДЛ)",
-    tag: "история",
-    desc: "Поварская, 52. Усадьба, описанная Толстым в «Войне и мире» как дом Ростовых. Сейчас Центральный дом литераторов. <b>🌿 Скрытый двор:</b> за главным зданием — «Писательский сад» с липами, скамейки, практически никого. Вход через арку справа от главного крыльца. <b>🥃 Заход в бар:</b> в дубовом зале ЦДЛ — графинчик медовухи или настойка на калгане + бутер с сёмгой. 20 минут под портретами писателей. Пускают не всегда, дресс-код умеренный." },
-
-  { n: 18, main: true, lat: 55.7584, lng: 37.5918,
-    name: "Скатертный переулок",
-    tag: "дворики",
-    desc: "Гастрономический квартал царских поваров: Скатертный, Хлебный, Столовый, Скарятинский. Тихие дворы, особняки. Здесь снимают кино." },
-
-  { n: 19, main: true, lat: 55.7565, lng: 37.5935,
-    name: "Хлебный переулок",
-    tag: "переулки",
-    desc: "Особняки эклектики, посольства. Идём дальше на восток, к Малой Никитской." },
-
-  { n: 20, bonus: "J", lat: 55.7606, lng: 37.5998,
-    name: "Особняк Рябушинского (Музей Горького)",
-    tag: "must-see",
-    desc: "Малая Никитская, 6/2. Шедевр Шехтеля (1902) — икона русского модерна. Знаменитая «лестница-волна» с медузой-люстрой. Вход бесплатный. Крюк 10 минут от основного маршрута — обязательно." },
-
-  { n: 21, main: true, lat: 55.7592, lng: 37.6030,
-    name: "Храм Большого Вознесения",
-    tag: "история",
-    desc: "У Никитских Ворот. Здесь венчался Пушкин с Натальей Гончаровой в 1831. Снаружи — фонтан-ротонда «Пушкин и Натали», к которому у москвичей противоречивые чувства." },
-
-  { n: 22, bonus: "H", lat: 55.7543, lng: 37.5995,
-    name: "Грустный Гоголь во дворе",
-    tag: "инсайд",
-    desc: "Никитский бульвар, 7А — нырни во двор с бульвара. Оригинальный памятник Андреева (1909) — Гоголь, согнувшийся в плаще. Стоит во дворе дома, где писатель сжёг «Мёртвые души» и умер в 1852. Советский памятник на Гоголевском — поздняя подмена. «Правильного» Гоголя знают только местные." },
-
-  { n: 23, bonus: "O", lat: 55.7560, lng: 37.5990,
-    name: "Паб «Джон Донн»",
-    tag: "🥃 шот-стоп",
-    desc: "Никитский бульвар, 13. Классический английский паб с начала 2000-х. <b>🔍 Как найти:</b> неприметная дверь полуподвала — лестница вниз с бульвара, вывеска маленькая, легко пройти мимо. <b>Что взять:</b> полпинты IPA или пинта гиннесса + солёные орешки. 15 минут — и дальше. Средний чек на быстрый заход — 400–600₽." },
-
-  { n: 24, bonus: "I", lat: 55.7557, lng: 37.6020,
-    name: "Музей Востока",
-    tag: "музей",
-    desc: "Никитский бульвар, 12а. Ампирный особняк Луниных, огромная коллекция искусства Японии, Китая, Индии, Средней Азии. Обычно пусто — можно полчаса ходить одному по залам." },
-
-  { n: 25, main: true, lat: 55.7571, lng: 37.6048,
-    name: "Московская консерватория",
-    tag: "обязательно",
-    desc: "Большая Никитская, 13. Памятник Чайковскому во дворе. Летом студенты играют прямо на улице — можно просто постоять и послушать." },
-
-  { n: 26, bonus: "K", lat: 55.7583, lng: 37.6035,
-    name: "Кафе «Маяк»",
-    tag: "☕ для своих",
-    desc: "Большая Никитская, 19/13. <b>🔍 Как найти:</b> подъезд дома, на табличке «Кафе Маяк», второй этаж — скрипучая лестница. Культовое место театральной и журналистской Москвы с 90-х. Деревянные столы, приглушённый свет, недорого. <b>Что взять:</b> графинчик хреновухи (50 мл) или клюковки, бутер с килькой и маринованный огурец — классика. Средний чек — 500–800₽. 20 минут и дальше. Перед выходом проверь — место живое, но бывает закрыто на банкеты." },
-
-  { n: 27, main: true, lat: 55.7602, lng: 37.6070,
-    name: "Брюсов переулок",
-    tag: "обязательно",
-    desc: "Храм Воскресения Словущего, «дом артистов» (Брюсов 17), виды на колокольни. Один из самых фотогеничных переулков Москвы. <b>🌿 Скрытый двор:</b> за храмом — тихий карман со скамейками, сюда приходят репетировать тексты актёры ГИТИС. Абсолютная тишина в 50 метрах от Тверской." },
-
-  { n: 28, main: true, lat: 55.7615, lng: 37.6075,
-    name: "Леонтьевский переулок",
-    tag: "переулки",
-    desc: "Особняки, Музей народного искусства (Морозовское собрание). Если остались силы — можно заглянуть внутрь." },
-
-  { n: 29, main: true, lat: 55.7625, lng: 37.6063,
-    name: "Тверская площадь",
-    tag: "ориентир",
-    desc: "Памятник Юрию Долгорукому, здание мэрии. Короткий выход на Тверскую — и сразу ныряем обратно в переулки, Тверская не наш путь." },
-
-  { n: 30, bonus: "L", lat: 55.7615, lng: 37.6055,
-    name: "Дом Нирнзее",
-    tag: "легенда",
-    desc: "Большой Гнездниковский, 10. Первый московский «тучерез» (1913), 40 метров. Крыша упомянута у Булгакова и Маяковского. На крышу иногда пускают с экскурсией — вид на «старую» Москву с высоты." },
-
-  { n: 31, bonus: "N", lat: 55.7625, lng: 37.6057,
-    name: "Le Boule",
-    tag: "☕ для своих",
-    desc: "Тверской бульвар, 22Б. <b>🌿 Скрытый двор:</b> сам бар на первом этаже, но самое вкусное — петанк-площадка в глубине двора. Летом проси столик во дворе под каштаном. Французское бистро, местные играют в петанк по вечерам. <b>Что взять:</b> рюмка Pastis (анисовая со льдом — полощет нёбо после Маяка) или Suze, бокал розе «Bandol», тарталетка с тапенадом. 15–20 минут на аперитив. Проверь работу перед выходом." },
-
-  { n: 32, bonus: "M", lat: 55.7615, lng: 37.6098,
-    name: "Книжный «Фаланстер»",
-    tag: "книги",
-    desc: "Малый Гнездниковский, 12/27. <b>🔍 Как найти:</b> заходишь в арку во двор, первый внутренний двор, неприметная дверь слева — вывеска только изнутри. Независимый книжный с 2002 года: философия, редкие издания, то, чего нет больше нигде. Работает на репутации." },
-
-  { n: 33, main: true, lat: 55.7632, lng: 37.6118,
-    name: "Георгиевский переулок",
-    tag: "дворики",
-    desc: "Обход Камергерского через дворы. <b>🌿 Скрытый двор:</b> Палаты Троекуровых (XVII в.) — один из старейших гражданских домов Москвы — спрятаны во дворе Госдумы. Идёшь вдоль красной кирпичной стены Думы, ныряешь в арку между корпусами. Охрана не проверяет, но лучше не в часы пик." },
-
-  { n: 34, main: true, lat: 55.7657, lng: 37.6100,
-    name: "Страстной бульвар, 12к1",
-    tag: "финиш",
-    desc: "Финиш. Рядом — Пушкинская площадь и метро. Если ещё есть силы — до сада «Эрмитаж» 10 минут пешком." }
+    tag: "🖼️ музей",
+    desc: "Остоженка, 16. От Коншиной спускаемся через Чертольский переулок к Остоженке. Выставки + перерыв. Дальше — развилка." }
 ];
 
-const imgPath = (n) => `img/${String(n).padStart(2, '0')}.jpg`;
-const wm = (path) => `https://images.weserv.nl/?url=upload.wikimedia.org/wikipedia/commons/${path}&w=800&h=450&fit=cover&output=jpg`;
-const FALLBACK = {
-  11: wm('a/ab/Sivtsev_Vrazhek_Lane_20230725_122505.jpg'),
-  12: wm('7/75/Moscow%2C_Gagarinsky_11.jpg'),
-  13: wm('7/73/Moscow%2C_Starokonyushenny_20.jpg'),
-  14: wm('3/37/Melnikov_House%2C_May_2021.jpg'),
-  15: wm('f/fa/Moscow_BNikolopeskovsky11_asv2018-09.jpg'),
-  16: wm('5/58/Arbat_District%2C_Moscow%2C_Russia_-_panoramio_%2866%29.jpg'),
-  17: wm('5/55/Povarskaya_Street_52.jpg'),
-  18: wm('3/30/Moscow%2C_Skatertny_Lane.jpg'),
-  19: wm('0/01/Moscow%2C_Khlebny_Lane.jpg'),
-  20: wm('0/0d/%D0%9E%D1%81%D0%BE%D0%B1%D0%BD%D1%8F%D0%BA_%D0%A0%D1%8F%D0%B1%D1%83%D1%88%D0%B8%D0%BD%D1%81%D0%BA%D0%BE%D0%B3%D0%BE02.JPG'),
-  21: wm('f/fe/Moscow%2C_Bolshaya_Nikitskaya_36_01.jpg'),
-  22: wm('9/9a/Nikolay_Gogol_01.JPG'),
-  24: wm('4/4d/East_nations_art_museum_in_Moscow_shot_01.jpg'),
-  25: wm('4/45/Moscow_05-2017_img41_Conservatory.jpg'),
-  26: wm('e/ec/Bolshaya_Nikitskaya_roof.jpg'),
-  27: wm('0/0d/Moscow%2C_Bryusov_Lane.jpg'),
-  28: wm('9/94/Moscow%2C_Leontievsky_lane_2-26_str_1_%282013%29_by_shakko_01.jpg'),
-  29: wm('8/84/Moscow%2C_B._Dmitrovka%2C_15_-_RGASPI_%28view_from_Tverskaya%29_2010s%2C_by_shakko_01.jpg'),
-  30: wm('e/e1/%D0%94%D0%BE%D0%BC_%D0%9D%D0%B8%D1%80%D0%BD%D0%B7%D0%B5%D0%B5_2.JPG'),
-  31: wm('2/28/On_Tverskoy_Boulevard%2C_Moscow_in_autumn.JPG'),
-  32: wm('a/ab/Moscow%2C_M-Gnezdnikovsky_7_Aug_2024_01.jpg'),
-  33: wm('b/b4/GeorgievskyPereulokMoscow.jpg'),
-  34: wm('7/7f/%D0%A1%D1%82%D1%80%D0%B0%D1%81%D1%82%D0%BD%D0%BE%D0%B9_%D0%B1%D1%83%D0%BB%D1%8C%D0%B2%D0%B0%D1%80_%28Strastnoy_Boulevard%29%2C_%D0%9C%D0%BE%D1%81%D0%BA%D0%B2%D0%B0_04.jpg')
+const BRANCHES = {
+  a: {
+    key: "a",
+    name: "Кабинет психолога",
+    icon: "🧠",
+    desc: "Через Волхонку и Дом Пашкова к бару, потом краул по Большой Никитской.",
+    meta: "~2,5 ч · 9 точек · 3 бара",
+    points: [
+      { n: 5, lat: 55.7510, lng: 37.6080,
+        name: "Бар «Кабинет психолога»",
+        tag: "🍷 бар",
+        desc: "Староваганьковский, 19 с3. Концепт-бар с «терапевтической» эстетикой. По пути от МАММ — Храм Христа Спасителя, Патриарший мост, ГМИИ, Дом Пашкова, церковь Николая на Старом Ваганькове. На бар — 30–40 мин." },
+      { n: 6, lat: 55.7530, lng: 37.6105,
+        name: "Дворик Моховая, 9 с24",
+        tag: "🌿 двор",
+        desc: "5 мин от бара. Скрытый карман между корпусами старого МГУ. Тихо, мало кто знает." },
+      { n: 7, lat: 55.7560, lng: 37.6028,
+        name: "Leveldva (краул 1)",
+        tag: "🍸 краул",
+        desc: "Б. Никитская, 12. Разведка — пробуем на месте. Если зайдёт — задерживаемся, если нет — идём дальше." },
+      { n: 8, lat: 55.7583, lng: 37.6035,
+        name: "«Маяк» (краул 2)",
+        tag: "🥃 краул",
+        desc: "Б. Никитская, 19/13, 2 этаж. Подъезд жилого дома, скрипучая лестница. Графинчик хреновухи + бутер с килькой. 20 мин." },
+      { n: 9, lat: 55.7585, lng: 37.6010,
+        name: "«Винный базар» (краул 3)",
+        tag: "🍷 краул",
+        desc: "Никитский бул., 12. На месте бывшего «Жан-Жака». Бокал вина, 30 мин — последний бар." },
+      { n: 10, lat: 55.7602, lng: 37.6070,
+        name: "Брюсов переулок",
+        tag: "🌿 переулок",
+        desc: "Храм Воскресения Словущего, «дом артистов» (Брюсов, 17), виды на колокольни. За храмом — скрытый карман со скамейками." },
+      { n: 11, lat: 55.7625, lng: 37.6063,
+        name: "Тверская площадь",
+        tag: "📍 ориентир",
+        desc: "Памятник Юрию Долгорукому, мэрия. Короткий выход на Тверскую — и сразу обратно в переулки." },
+      { n: 12, lat: 55.7632, lng: 37.6118,
+        name: "Палаты Троекуровых (Георгиевский)",
+        tag: "🌿 двор",
+        desc: "Один из старейших гражданских домов Москвы (XVII в.). Спрятаны во дворе Госдумы — заходишь в арку между корпусами." },
+      { n: 13, lat: 55.7657, lng: 37.6100,
+        name: "Страстной бульвар, 12к1",
+        tag: "🏁 финиш",
+        desc: "Финиш. Рядом Пушкинская площадь и метро." }
+    ]
+  },
+  b: {
+    key: "b",
+    name: "Диктатура Эстетики",
+    icon: "🎨",
+    desc: "Через Гоголевский бульвар. Арт-пространство, потом северный путь к Страстному.",
+    meta: "~2 ч · 5 точек · короче",
+    points: [
+      { n: 5, lat: 55.7475, lng: 37.6028,
+        name: "Гоголевский бульвар",
+        tag: "🌳 бульвар",
+        desc: "От МАММ выходим на Гоголевский бульвар у Пречистенских ворот. По пути — памятник Шолохову «Тонущие кони», «Дом с рыцарями» (д. 10 — неоготика, рыцари в нишах)." },
+      { n: 6, lat: 55.7500, lng: 37.6050,
+        name: "Диктатура Эстетики",
+        tag: "🎨 арт",
+        desc: "Гоголевский бульвар. <i>Адрес уточнить</i>. Арт-пространство / концепт. Закладываем 30–60 мин — посмотреть программу, выпить чего-нибудь." },
+      { n: 7, lat: 55.7560, lng: 37.6020,
+        name: "Никитский бульвар",
+        tag: "🌳 бульвар",
+        desc: "По бульварному кольцу на восток. По пути — «Грустный Гоголь» во дворе д. 7А (где писатель сжёг «Мёртвые души»), Музей Востока (д. 12а)." },
+      { n: 8, lat: 55.7625, lng: 37.6063,
+        name: "Тверская площадь",
+        tag: "📍 ориентир",
+        desc: "Через Тверской бульвар выходим на Тверскую площадь. Памятник Долгорукому, мэрия." },
+      { n: 9, lat: 55.7657, lng: 37.6100,
+        name: "Страстной бульвар, 12к1",
+        tag: "🏁 финиш",
+        desc: "Финиш." }
+    ]
+  }
 };
 
+const IMAGES = {
+  'p-4': 'img/01.jpg', // МАММ
+  'a-7': 'img/25.jpg', // Маяк area
+  'a-10': 'img/27.jpg', // Брюсов
+  'a-11': 'img/28.jpg', // Тверская
+  'a-12': 'img/33.jpg', // Палаты Троекуровых
+  'a-13': 'img/34.jpg', // Страстной
+  'b-5': 'img/09.jpg', // Гоголевский
+  'b-7': 'img/22.jpg', // Никитский (Гоголь)
+  'b-8': 'img/28.jpg', // Тверская
+  'b-9': 'img/34.jpg'  // Страстной
+};
+const imgFor = (kind, n) => IMAGES[`${kind}-${n}`] || '';
+
 const cards = document.getElementById('cards');
-ROUTE.forEach((p, i) => {
+let activeBranch = localStorage.getItem('promenade-branch') || null;
+
+function renderCards() {
+  cards.innerHTML = '';
+  PREFIX.forEach(p => cards.appendChild(makeCard(p, 'prefix', 'p')));
+  cards.appendChild(makeBranchSelector());
+  if (activeBranch) {
+    const b = BRANCHES[activeBranch];
+    cards.appendChild(makeBranchActive(b));
+    b.points.forEach(p => cards.appendChild(makeCard(p, `branch-${b.key}`, b.key)));
+  }
+  refreshMap();
+}
+
+function makeCard(p, cls, kind) {
   const card = document.createElement('article');
-  card.className = 'card' + (p.bonus ? ' bonus' : '');
-  card.id = 'p' + p.n;
-  const img = imgPath(p.n);
-  const fallback = FALLBACK[p.n] || '';
+  card.className = 'card ' + cls;
+  card.id = `${kind}-${p.n}`;
+  const img = imgFor(kind, p.n);
   card.innerHTML = `
-    <div class="photo"><img src="${img}" alt="${p.name}" loading="lazy"${fallback ? ` data-fb="${fallback}" onerror="if(this.dataset.fb){this.src=this.dataset.fb;delete this.dataset.fb;}else{this.parentElement.style.display='none'}"` : ` onerror="this.parentElement.style.display='none'"`}></div>
+    ${img ? `<div class="photo"><img src="${img}" alt="${p.name}" loading="lazy" onerror="this.parentElement.style.display='none'"></div>` : ''}
     <div class="card-inner">
       <div class="num">${p.n}</div>
       <div class="body">
@@ -445,107 +412,195 @@ ROUTE.forEach((p, i) => {
         <p>${p.desc}</p>
         <div class="meta">
           <span class="tag">${p.tag}</span>
-          <button class="show-map" data-i="${i}">на карте →</button>
+          <button class="show-map" data-kind="${kind}" data-n="${p.n}">на карте →</button>
         </div>
       </div>
     </div>
   `;
-  cards.appendChild(card);
-});
+  return card;
+}
 
-const map = L.map('map', { zoomControl: false, attributionControl: true }).setView([55.7520, 37.6010], 13);
+function makeBranchSelector() {
+  const div = document.createElement('div');
+  div.className = 'branch-selector';
+  div.innerHTML = `
+    <h3>🔀 Развилка после МАММ</h3>
+    <div class="sub">Куда дальше? Выбери — маршрут перестроится.</div>
+    <div class="branch-buttons">
+      <button class="b-a" data-branch="a">
+        <span class="icon">${BRANCHES.a.icon}</span>
+        <span class="name">${BRANCHES.a.name}</span>
+        <span class="desc">${BRANCHES.a.desc}</span>
+        <span class="meta">${BRANCHES.a.meta}</span>
+      </button>
+      <button class="b-b" data-branch="b">
+        <span class="icon">${BRANCHES.b.icon}</span>
+        <span class="name">${BRANCHES.b.name}</span>
+        <span class="desc">${BRANCHES.b.desc}</span>
+        <span class="meta">${BRANCHES.b.meta}</span>
+      </button>
+    </div>
+  `;
+  div.querySelectorAll('button[data-branch]').forEach(btn => {
+    btn.addEventListener('click', () => selectBranch(btn.dataset.branch));
+  });
+  return div;
+}
+
+function makeBranchActive(b) {
+  const div = document.createElement('div');
+  div.className = `branch-active branch-${b.key}`;
+  div.innerHTML = `
+    <span>${b.icon}</span>
+    <span>Выбран маршрут: <b>${b.name}</b></span>
+    <button data-action="switch">сменить</button>
+  `;
+  div.querySelector('button').addEventListener('click', () => selectBranch(null));
+  return div;
+}
+
+function selectBranch(key) {
+  activeBranch = key;
+  if (key) localStorage.setItem('promenade-branch', key);
+  else localStorage.removeItem('promenade-branch');
+  renderCards();
+  if (key) {
+    setTimeout(() => {
+      const firstBranchPoint = document.getElementById(`${key}-${BRANCHES[key].points[0].n}`);
+      if (firstBranchPoint) firstBranchPoint.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }, 100);
+  } else {
+    document.querySelector('.branch-selector')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+}
+
+const map = L.map('map', { zoomControl: false, attributionControl: true }).setView([55.7500, 37.6010], 13);
 L.control.zoom({ position: 'bottomright' }).addTo(map);
 L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
   attribution: '&copy; OSM &copy; CARTO',
   subdomains: 'abcd', maxZoom: 20
 }).addTo(map);
 
-const markers = [];
-ROUTE.forEach((p, i) => {
-  const label = p.bonus ? p.bonus : p.n;
-  const cls = p.bonus ? 'bonus-marker' : 'num-marker';
+let allMarkers = [];
+let routeLines = [];
+
+function makeMarker(p, type, kind) {
+  const cls = type === 'prefix' ? 'prefix' : (type === 'a' ? 'branch-a' : 'branch-b');
   const icon = L.divIcon({
     className: '',
-    html: `<div class="${cls}">${label}</div>`,
-    iconSize: [26, 26], iconAnchor: [13, 13]
+    html: `<div class="pin ${cls}">${p.n}</div>`,
+    iconSize: [28, 28], iconAnchor: [14, 14]
   });
   const m = L.marker([p.lat, p.lng], { icon }).addTo(map);
   m.bindPopup(`<b>${p.n}. ${p.name}</b>${p.desc}`);
-  m.on('click', () => focusCard(i));
-  markers.push(m);
-});
+  m.options._type = type;
+  m.options._n = p.n;
+  m.options._kind = kind;
+  m.on('click', () => focusCard(kind, p.n));
+  return m;
+}
 
-async function drawRoute() {
-  const coords = ROUTE.map(p => `${p.lng},${p.lat}`).join(';');
+PREFIX.forEach(p => allMarkers.push(makeMarker(p, 'prefix', 'p')));
+BRANCHES.a.points.forEach(p => allMarkers.push(makeMarker(p, 'a', 'a')));
+BRANCHES.b.points.forEach(p => allMarkers.push(makeMarker(p, 'b', 'b')));
+
+async function drawRouteFor(points, color, dash) {
+  const coords = points.map(p => `${p.lng},${p.lat}`).join(';');
   const url = `https://router.project-osrm.org/route/v1/foot/${coords}?overview=full&geometries=geojson`;
   try {
     const res = await fetch(url);
     const data = await res.json();
     if (data.routes && data.routes[0]) {
-      L.geoJSON(data.routes[0].geometry, {
-        style: { color: '#c0392b', weight: 4, opacity: 0.75, dashArray: '1 6', lineCap: 'round' }
+      const layer = L.geoJSON(data.routes[0].geometry, {
+        style: { color, weight: 4, opacity: 0.75, dashArray: dash, lineCap: 'round' }
       }).addTo(map);
+      routeLines.push(layer);
       return;
     }
   } catch(e) {}
-  L.polyline(ROUTE.map(p => [p.lat, p.lng]), { color: '#c0392b', weight: 3, opacity: 0.6, dashArray: '6 6' }).addTo(map);
+  const layer = L.polyline(points.map(p => [p.lat, p.lng]), {
+    color, weight: 3, opacity: 0.6, dashArray: '6 6'
+  }).addTo(map);
+  routeLines.push(layer);
 }
-drawRoute();
 
-const group = L.featureGroup(markers);
-map.fitBounds(group.getBounds().pad(0.1));
+function refreshMap() {
+  routeLines.forEach(l => map.removeLayer(l));
+  routeLines = [];
 
-function focusCard(i) {
-  const p = ROUTE[i];
+  // Highlight markers based on selected branch
+  allMarkers.forEach(m => {
+    const t = m.options._type;
+    const el = m.getElement();
+    if (!el) return;
+    const isActive = t === 'prefix' || t === activeBranch || activeBranch === null;
+    el.classList.toggle('faded', !isActive);
+  });
+
+  // Draw routes
+  const lastPrefix = PREFIX[PREFIX.length - 1];
+  if (activeBranch) {
+    const branchPoints = [lastPrefix, ...BRANCHES[activeBranch].points];
+    const color = activeBranch === 'a' ? '#3a7d44' : '#c8782b';
+    drawRouteFor(PREFIX, '#c0392b', '1 6');
+    drawRouteFor(branchPoints, color, '1 6');
+  } else {
+    drawRouteFor(PREFIX, '#c0392b', '1 6');
+  }
+
+  // Fit bounds to active markers
+  const visible = allMarkers.filter(m => {
+    const t = m.options._type;
+    return t === 'prefix' || t === activeBranch || activeBranch === null;
+  });
+  if (visible.length) {
+    const group = L.featureGroup(visible);
+    map.fitBounds(group.getBounds().pad(0.1));
+  }
+}
+
+function focusCard(kind, n) {
+  const card = document.getElementById(`${kind}-${n}`);
+  if (!card) return;
   document.querySelectorAll('.card').forEach(c => c.classList.remove('active'));
-  const card = document.getElementById('p' + p.n);
   card.classList.add('active');
-  card.scrollIntoView({ behavior: 'smooth', block: 'start' });
-}
-
-function focusPoint(i) {
-  const p = ROUTE[i];
-  map.setView([p.lat, p.lng], 16, { animate: true });
-  markers[i].openPopup();
-  if (widget.classList.contains('collapsed')) widget.classList.remove('collapsed');
+  card.scrollIntoView({ behavior: 'smooth', block: 'center' });
 }
 
 document.addEventListener('click', e => {
   const btn = e.target.closest('.show-map');
   if (btn) {
-    const i = parseInt(btn.dataset.i, 10);
-    focusPoint(i);
-    setTimeout(() => map.invalidateSize(), 260);
+    const kind = btn.dataset.kind;
+    const n = parseInt(btn.dataset.n, 10);
+    let p;
+    if (kind === 'p') p = PREFIX.find(x => x.n === n);
+    else p = BRANCHES[kind].points.find(x => x.n === n);
+    if (p) {
+      map.setView([p.lat, p.lng], 16, { animate: true });
+      const m = allMarkers.find(x => x.options._kind === kind && x.options._n === n);
+      if (m) m.openPopup();
+      setTimeout(() => map.invalidateSize(), 260);
+    }
   }
 });
 
 const widget = document.getElementById('map-widget');
-const btnExpand = document.getElementById('btn-expand');
-const btnCollapse = document.getElementById('btn-collapse');
-const btnLocate = document.getElementById('btn-locate');
-
-btnExpand.addEventListener('click', () => {
+document.getElementById('btn-expand').addEventListener('click', () => {
   widget.classList.remove('collapsed');
   widget.classList.toggle('expanded');
-  btnExpand.textContent = widget.classList.contains('expanded') ? '⛉' : '⛶';
-  btnExpand.title = widget.classList.contains('expanded') ? 'Свернуть в угол' : 'Развернуть';
-  setTimeout(() => { map.invalidateSize(); map.fitBounds(group.getBounds().pad(0.1)); }, 260);
+  setTimeout(() => { map.invalidateSize(); refreshMap(); }, 260);
 });
-
-btnCollapse.addEventListener('click', () => {
+document.getElementById('btn-collapse').addEventListener('click', () => {
   widget.classList.remove('expanded');
   widget.classList.toggle('collapsed');
-  btnExpand.textContent = '⛶';
 });
-
 widget.querySelector('.widget-header').addEventListener('click', e => {
   if (widget.classList.contains('collapsed') && !e.target.closest('button')) {
     widget.classList.remove('collapsed');
     setTimeout(() => map.invalidateSize(), 260);
   }
 });
-
-btnLocate.addEventListener('click', () => {
+document.getElementById('btn-locate').addEventListener('click', () => {
   if (!('geolocation' in navigator)) return alert('Геолокация недоступна');
   navigator.geolocation.getCurrentPosition(pos => {
     const { latitude, longitude } = pos.coords;
@@ -555,6 +610,8 @@ btnLocate.addEventListener('click', () => {
     }).addTo(map);
   }, () => alert('Не удалось определить местоположение'));
 });
+
+renderCards();
 </script>
 </body>
 </html>
