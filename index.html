@@ -204,7 +204,14 @@
   .leaflet-marker-icon .pin.prefix { background: var(--accent); }
   .leaflet-marker-icon .pin.branch-a { background: var(--branch-a); }
   .leaflet-marker-icon .pin.branch-b { background: var(--branch-b); }
-  .leaflet-marker-icon.faded { opacity: 0.35; }
+  .leaflet-marker-icon.faded { opacity: 0.25; }
+
+  .card.branch-b1:target, .card.branch-b1.active { border-color: #8e44ad; box-shadow: 0 4px 20px rgba(142, 68, 173, 0.18); }
+  .card.branch-b2:target, .card.branch-b2.active { border-color: #a04060; box-shadow: 0 4px 20px rgba(160, 64, 96, 0.18); }
+  .card.branch-b1 .num { background: #8e44ad; }
+  .card.branch-b2 .num { background: #a04060; }
+  .card.branch-b1 .tag { color: #8e44ad; }
+  .card.branch-b2 .tag { color: #a04060; }
   .leaflet-popup-content { font-size: 13px; line-height: 1.45; margin: 10px 14px !important; }
   .leaflet-popup-content b { display: block; margin-bottom: 4px; font-size: 14px; }
 
@@ -342,8 +349,8 @@ const BRANCHES = {
     key: "b",
     name: "Диктатура Эстетики",
     icon: "🎨",
-    desc: "Через Гоголевский бульвар. Арт-пространство, потом северный путь к Страстному.",
-    meta: "~2 ч · 5 точек · короче",
+    desc: "Через Гоголевский бульвар. Арт-пространство, дальше — выбор по бару.",
+    meta: "развилка · 2 варианта",
     points: [
       { n: 5, lat: 55.7475, lng: 37.6028,
         name: "Гоголевский бульвар",
@@ -352,20 +359,62 @@ const BRANCHES = {
       { n: 6, lat: 55.7488, lng: 37.6010,
         name: "Диктатура Эстетики",
         tag: "🎨 арт",
-        desc: "Гоголевский бульвар, 17. Арт-пространство / концепт-бар. Закладываем 30–60 мин — посмотреть программу, выпить чего-нибудь." },
-      { n: 7, lat: 55.7560, lng: 37.6020,
-        name: "Никитский бульвар",
-        tag: "🌳 бульвар",
-        desc: "По бульварному кольцу на восток. По пути — «Грустный Гоголь» во дворе д. 7А (где писатель сжёг «Мёртвые души»), Музей Востока (д. 12а)." },
-      { n: 8, lat: 55.7625, lng: 37.6063,
-        name: "Тверская площадь",
-        tag: "📍 ориентир",
-        desc: "Через Тверской бульвар выходим на Тверскую площадь. Памятник Долгорукому, мэрия." },
-      { n: 9, lat: 55.7657, lng: 37.6100,
-        name: "Страстной бульвар, 12к1",
-        tag: "🏁 финиш",
-        desc: "Финиш." }
-    ]
+        desc: "Гоголевский бульвар, 17. Арт-пространство / концепт-бар. Закладываем 30–60 мин — посмотреть программу, выпить чего-нибудь. Дальше — развилка." }
+    ],
+    subBranches: {
+      b1: {
+        key: "b1",
+        name: "Царская рюмочная",
+        icon: "🥃",
+        desc: "Крюк на Новинский бульвар к ретро-рюмочной, потом возврат через Бронные.",
+        meta: "+30 мин крюк · 4 точки",
+        color: "#8e44ad",
+        points: [
+          { n: 7, lat: 55.7610, lng: 37.5870,
+            name: "Царская рюмочная",
+            tag: "🥃 бар",
+            desc: "Новинский бульвар, 12. Рюмочная в стилистике рубежа XIX–XX вв. Ассортимент настоек, селёдка с луком, чёрный хлеб. Атмосфера трактира — попробовать 1 рюмку и закуску." },
+          { n: 8, lat: 55.7600, lng: 37.5970,
+            name: "Возврат через Малую Бронную",
+            tag: "🌳 бульвар",
+            desc: "От Новинского — на восток через Спиридоновку и Малую Бронную, мимо Патриарших прудов. По дороге — особняк Тарасова, дом Морозова." },
+          { n: 9, lat: 55.7625, lng: 37.6063,
+            name: "Тверская площадь",
+            tag: "📍 ориентир",
+            desc: "Памятник Долгорукому, мэрия." },
+          { n: 10, lat: 55.7657, lng: 37.6100,
+            name: "Страстной бульвар, 12к1",
+            tag: "🏁 финиш",
+            desc: "Финиш." }
+        ]
+      },
+      b2: {
+        key: "b2",
+        name: "Винный базар",
+        icon: "🍷",
+        desc: "Прямой путь по Никитскому бульвару — почти без крюка.",
+        meta: "короче · 4 точки",
+        color: "#a04060",
+        points: [
+          { n: 7, lat: 55.7560, lng: 37.6020,
+            name: "Никитский бульвар",
+            tag: "🌳 бульвар",
+            desc: "По бульварному кольцу на восток. По пути — «Грустный Гоголь» во дворе д. 7А (где писатель сжёг «Мёртвые души»), Музей Востока (д. 12а)." },
+          { n: 8, lat: 55.7585, lng: 37.6010,
+            name: "«Винный базар»",
+            tag: "🍷 бар",
+            desc: "Никитский бульвар, 12 (на месте бывшего «Жан-Жака»). Бокал вина, посидеть 30 мин." },
+          { n: 9, lat: 55.7625, lng: 37.6063,
+            name: "Тверская площадь",
+            tag: "📍 ориентир",
+            desc: "Памятник Долгорукому, мэрия." },
+          { n: 10, lat: 55.7657, lng: 37.6100,
+            name: "Страстной бульвар, 12к1",
+            tag: "🏁 финиш",
+            desc: "Финиш." }
+        ]
+      }
+    }
   }
 };
 
@@ -385,6 +434,7 @@ const imgFor = (kind, n) => IMAGES[`${kind}-${n}`] || '';
 
 const cards = document.getElementById('cards');
 let activeBranch = localStorage.getItem('promenade-branch') || null;
+let activeSub = localStorage.getItem('promenade-sub') || null;
 
 function renderCards() {
   cards.innerHTML = '';
@@ -394,6 +444,14 @@ function renderCards() {
     const b = BRANCHES[activeBranch];
     cards.appendChild(makeBranchActive(b));
     b.points.forEach(p => cards.appendChild(makeCard(p, `branch-${b.key}`, b.key)));
+    if (b.subBranches) {
+      cards.appendChild(makeSubBranchSelector(b));
+      if (activeSub && b.subBranches[activeSub]) {
+        const sub = b.subBranches[activeSub];
+        cards.appendChild(makeSubBranchActive(sub));
+        sub.points.forEach(p => cards.appendChild(makeCard(p, `branch-${sub.key}`, sub.key)));
+      }
+    }
   }
   refreshMap();
 }
@@ -459,8 +517,48 @@ function makeBranchActive(b) {
   return div;
 }
 
+function makeSubBranchSelector(b) {
+  const div = document.createElement('div');
+  div.className = 'branch-selector';
+  const subs = Object.values(b.subBranches);
+  div.innerHTML = `
+    <h3>🔀 Развилка после Диктатуры</h3>
+    <div class="sub">Куда дальше?</div>
+    <div class="branch-buttons">
+      ${subs.map(s => `
+        <button class="b-${s.key}" data-sub="${s.key}" style="--c:${s.color}">
+          <span class="icon">${s.icon}</span>
+          <span class="name" style="color:${s.color}">${s.name}</span>
+          <span class="desc">${s.desc}</span>
+          <span class="meta">${s.meta}</span>
+        </button>
+      `).join('')}
+    </div>
+  `;
+  div.querySelectorAll('button[data-sub]').forEach(btn => {
+    btn.addEventListener('click', () => selectSub(btn.dataset.sub));
+  });
+  return div;
+}
+
+function makeSubBranchActive(sub) {
+  const div = document.createElement('div');
+  div.className = `branch-active branch-${sub.key}`;
+  div.style.background = `${sub.color}15`;
+  div.style.color = sub.color;
+  div.innerHTML = `
+    <span>${sub.icon}</span>
+    <span>Финальный участок: <b>${sub.name}</b></span>
+    <button>сменить</button>
+  `;
+  div.querySelector('button').addEventListener('click', () => selectSub(null));
+  return div;
+}
+
 function selectBranch(key) {
   activeBranch = key;
+  activeSub = null;
+  localStorage.removeItem('promenade-sub');
   if (key) localStorage.setItem('promenade-branch', key);
   else localStorage.removeItem('promenade-branch');
   renderCards();
@@ -474,6 +572,19 @@ function selectBranch(key) {
   }
 }
 
+function selectSub(key) {
+  activeSub = key;
+  if (key) localStorage.setItem('promenade-sub', key);
+  else localStorage.removeItem('promenade-sub');
+  renderCards();
+  if (key && activeBranch) {
+    setTimeout(() => {
+      const firstSub = document.getElementById(`${key}-${BRANCHES[activeBranch].subBranches[key].points[0].n}`);
+      if (firstSub) firstSub.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }, 100);
+  }
+}
+
 const map = L.map('map', { zoomControl: false, attributionControl: true }).setView([55.7500, 37.6010], 13);
 L.control.zoom({ position: 'bottomright' }).addTo(map);
 L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
@@ -484,11 +595,12 @@ L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
 let allMarkers = [];
 let routeLines = [];
 
-function makeMarker(p, type, kind) {
+function makeMarker(p, type, kind, customColor) {
   const cls = type === 'prefix' ? 'prefix' : (type === 'a' ? 'branch-a' : 'branch-b');
+  const style = customColor ? `background:${customColor}` : '';
   const icon = L.divIcon({
     className: '',
-    html: `<div class="pin ${cls}">${p.n}</div>`,
+    html: `<div class="pin ${cls}" style="${style}">${p.n}</div>`,
     iconSize: [28, 28], iconAnchor: [14, 14]
   });
   const m = L.marker([p.lat, p.lng], { icon }).addTo(map);
@@ -503,6 +615,9 @@ function makeMarker(p, type, kind) {
 PREFIX.forEach(p => allMarkers.push(makeMarker(p, 'prefix', 'p')));
 BRANCHES.a.points.forEach(p => allMarkers.push(makeMarker(p, 'a', 'a')));
 BRANCHES.b.points.forEach(p => allMarkers.push(makeMarker(p, 'b', 'b')));
+Object.values(BRANCHES.b.subBranches).forEach(sub => {
+  sub.points.forEach(p => allMarkers.push(makeMarker(p, sub.key, sub.key, sub.color)));
+});
 
 async function drawRouteFor(points, color, dash) {
   const coords = points.map(p => `${p.lng},${p.lat}`).join(';');
@@ -528,31 +643,39 @@ function refreshMap() {
   routeLines.forEach(l => map.removeLayer(l));
   routeLines = [];
 
-  // Highlight markers based on selected branch
+  // Determine which marker types are "active"
+  const activeTypes = new Set(['prefix']);
+  if (activeBranch) {
+    activeTypes.add(activeBranch);
+    if (activeBranch === 'b' && activeSub) activeTypes.add(activeSub);
+  } else {
+    // Nothing selected — show all
+    activeTypes.add('a'); activeTypes.add('b'); activeTypes.add('b1'); activeTypes.add('b2');
+  }
+
   allMarkers.forEach(m => {
     const t = m.options._type;
     const el = m.getElement();
     if (!el) return;
-    const isActive = t === 'prefix' || t === activeBranch || activeBranch === null;
-    el.classList.toggle('faded', !isActive);
+    el.classList.toggle('faded', !activeTypes.has(t));
   });
 
   // Draw routes
   const lastPrefix = PREFIX[PREFIX.length - 1];
-  if (activeBranch) {
-    const branchPoints = [lastPrefix, ...BRANCHES[activeBranch].points];
-    const color = activeBranch === 'a' ? '#3a7d44' : '#c8782b';
-    drawRouteFor(PREFIX, '#c0392b', '1 6');
-    drawRouteFor(branchPoints, color, '1 6');
-  } else {
-    drawRouteFor(PREFIX, '#c0392b', '1 6');
+  drawRouteFor(PREFIX, '#c0392b', '1 6');
+  if (activeBranch === 'a') {
+    drawRouteFor([lastPrefix, ...BRANCHES.a.points], '#3a7d44', '1 6');
+  } else if (activeBranch === 'b') {
+    const bPoints = [lastPrefix, ...BRANCHES.b.points];
+    drawRouteFor(bPoints, '#c8782b', '1 6');
+    if (activeSub) {
+      const sub = BRANCHES.b.subBranches[activeSub];
+      const lastB = BRANCHES.b.points[BRANCHES.b.points.length - 1];
+      drawRouteFor([lastB, ...sub.points], sub.color, '1 6');
+    }
   }
 
-  // Fit bounds to active markers
-  const visible = allMarkers.filter(m => {
-    const t = m.options._type;
-    return t === 'prefix' || t === activeBranch || activeBranch === null;
-  });
+  const visible = allMarkers.filter(m => activeTypes.has(m.options._type));
   if (visible.length) {
     const group = L.featureGroup(visible);
     map.fitBounds(group.getBounds().pad(0.1));
@@ -567,14 +690,24 @@ function focusCard(kind, n) {
   card.scrollIntoView({ behavior: 'smooth', block: 'center' });
 }
 
+function findPoint(kind, n) {
+  if (kind === 'p') return PREFIX.find(x => x.n === n);
+  if (BRANCHES[kind]) return BRANCHES[kind].points.find(x => x.n === n);
+  // Sub-branch lookup
+  for (const b of Object.values(BRANCHES)) {
+    if (b.subBranches && b.subBranches[kind]) {
+      return b.subBranches[kind].points.find(x => x.n === n);
+    }
+  }
+  return null;
+}
+
 document.addEventListener('click', e => {
   const btn = e.target.closest('.show-map');
   if (btn) {
     const kind = btn.dataset.kind;
     const n = parseInt(btn.dataset.n, 10);
-    let p;
-    if (kind === 'p') p = PREFIX.find(x => x.n === n);
-    else p = BRANCHES[kind].points.find(x => x.n === n);
+    const p = findPoint(kind, n);
     if (p) {
       map.setView([p.lat, p.lng], 16, { animate: true });
       const m = allMarkers.find(x => x.options._kind === kind && x.options._n === n);
