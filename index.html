@@ -130,6 +130,19 @@
   .landmark .facts { margin: 0; padding-left: 18px; font-size: 13px; color: #444; }
   .landmark .facts li { margin-bottom: 5px; }
   .landmark .facts li::marker { color: var(--accent); }
+  .landmark .speak-btn {
+    margin-top: 10px;
+    background: #fff; border: 1px solid var(--line); border-radius: 6px;
+    padding: 6px 12px; font-size: 12px; cursor: pointer; color: var(--ink);
+    display: inline-flex; align-items: center; gap: 6px;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .landmark .speak-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .landmark .speak-btn.playing {
+    background: var(--accent); color: #fff; border-color: var(--accent);
+  }
+  .landmark .speak-btn.playing::before { content: '⏸ '; }
+  .landmark .speak-btn:not(.playing)::before { content: '🔊 '; }
 
   .branch-selector {
     background: linear-gradient(180deg, #fff 0%, #faf7f1 100%);
@@ -595,12 +608,13 @@ function makeCard(p, cls, kind) {
       </div>
     </div>
     ${hasLandmarks ? `<div class="landmarks" hidden>
-      ${p.landmarks.map(lm => `
-        <div class="landmark">
+      ${p.landmarks.map((lm, i) => `
+        <div class="landmark" data-lm-idx="${i}">
           <h3>${lm.name}</h3>
           <div class="meta">${lm.meta}</div>
           <p class="history">${lm.history}</p>
           <ul class="facts">${lm.facts.map(f => `<li>${f}</li>`).join('')}</ul>
+          <button class="speak-btn" data-kind="${kind}" data-n="${p.n}" data-lm="${i}">озвучить</button>
         </div>
       `).join('')}
     </div>` : ''}
@@ -798,7 +812,74 @@ document.addEventListener('click', e => {
       setTimeout(() => block.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 100);
     }
   }
+  const speakBtn = e.target.closest('.speak-btn');
+  if (speakBtn) {
+    handleSpeak(speakBtn);
+  }
 });
+
+let currentSpeakBtn = null;
+let ruVoice = null;
+
+function pickRuVoice() {
+  if (ruVoice) return ruVoice;
+  const voices = window.speechSynthesis.getVoices();
+  // Prefer Milena / Yuri / Russian named voices
+  ruVoice = voices.find(v => /milena|yuri|katya|dmitri/i.test(v.name) && v.lang.startsWith('ru'))
+         || voices.find(v => v.lang.startsWith('ru'))
+         || voices.find(v => v.lang.startsWith('ru-RU'))
+         || null;
+  return ruVoice;
+}
+
+if ('speechSynthesis' in window) {
+  window.speechSynthesis.onvoiceschanged = () => { ruVoice = null; pickRuVoice(); };
+  pickRuVoice();
+}
+
+function handleSpeak(btn) {
+  if (!('speechSynthesis' in window)) {
+    alert('Браузер не поддерживает озвучку.');
+    return;
+  }
+  // If clicking same button while playing — stop
+  if (currentSpeakBtn === btn && window.speechSynthesis.speaking) {
+    window.speechSynthesis.cancel();
+    btn.classList.remove('playing');
+    currentSpeakBtn = null;
+    return;
+  }
+  // Cancel previous
+  if (window.speechSynthesis.speaking) {
+    window.speechSynthesis.cancel();
+    if (currentSpeakBtn) currentSpeakBtn.classList.remove('playing');
+  }
+  // Get text from this landmark
+  const lm = btn.closest('.landmark');
+  const title = lm.querySelector('h3').textContent;
+  const meta = lm.querySelector('.meta').textContent;
+  const history = lm.querySelector('.history').textContent;
+  const facts = Array.from(lm.querySelectorAll('.facts li')).map(li => li.textContent);
+  const text = `${title}. ${meta}. ${history} ${facts.map(f => f).join('. ')}`;
+
+  const utt = new SpeechSynthesisUtterance(text);
+  utt.lang = 'ru-RU';
+  const v = pickRuVoice();
+  if (v) utt.voice = v;
+  utt.rate = 0.95;
+  utt.pitch = 1.0;
+  utt.onend = () => {
+    btn.classList.remove('playing');
+    if (currentSpeakBtn === btn) currentSpeakBtn = null;
+  };
+  utt.onerror = () => {
+    btn.classList.remove('playing');
+    if (currentSpeakBtn === btn) currentSpeakBtn = null;
+  };
+  btn.classList.add('playing');
+  currentSpeakBtn = btn;
+  window.speechSynthesis.speak(utt);
+}
 
 const widget = document.getElementById('map-widget');
 document.getElementById('btn-expand').addEventListener('click', () => {
