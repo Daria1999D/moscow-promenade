@@ -411,10 +411,55 @@
     0%, 100% { transform: translateY(0) rotate(-1deg); }
     50% { transform: translateY(-5px) rotate(1deg); }
   }
+  .claude-mascot {
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
   .claude-mascot .eye {
     animation: blink 5s infinite;
     transform-origin: center;
     transform-box: fill-box;
+  }
+  .claude-bubble {
+    position: absolute;
+    top: -8px; left: 50%;
+    transform: translate(-50%, -100%);
+    background: var(--bg);
+    color: var(--ink);
+    padding: 10px 16px;
+    font-family: 'Neoris', sans-serif;
+    font-size: 13px;
+    border: 2px solid var(--ink);
+    border-radius: 14px;
+    pointer-events: none;
+    white-space: nowrap;
+    max-width: 320px;
+    opacity: 0;
+    transition: opacity .3s ease, transform .3s ease;
+    z-index: 5;
+  }
+  .claude-bubble::after {
+    content: '';
+    position: absolute;
+    bottom: -10px; left: 50%; transform: translateX(-50%);
+    width: 0; height: 0;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-top: 10px solid var(--ink);
+  }
+  .claude-bubble::before {
+    content: '';
+    position: absolute;
+    bottom: -7px; left: 50%; transform: translateX(-50%);
+    width: 0; height: 0;
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-top: 8px solid var(--bg);
+    z-index: 1;
+  }
+  .claude-bubble.show {
+    opacity: 1;
+    transform: translate(-50%, -110%);
   }
   @keyframes blink {
     0%, 93%, 100% { transform: scaleY(1); }
@@ -2229,6 +2274,29 @@ function scheduleSitting(delayMs) {
 // Если приглашение уже принято ранее — стартуем таймер от загрузки
 if (localStorage.getItem('invite-accepted') === '1') {
   scheduleSitting(62000);  // 6с задержка анимации + 2 × 28с цикла
+}
+
+/* === Облачко при клике на Клауда === */
+const CLAUDE_PHRASES = [
+  'Ну и зачем ты в меня тычешь?',
+  'Я тут просто плаваю',
+  'Я не кнопка, я осьминог',
+  'Хватит, щупальца устали',
+  'Окей, последний раз'
+];
+const claudeMascot = document.querySelector('.claude-mascot');
+if (claudeMascot && claudeMascot.parentElement) {
+  const bubble = document.createElement('div');
+  bubble.className = 'claude-bubble';
+  claudeMascot.parentElement.insertBefore(bubble, claudeMascot);
+  let claudeIdx = 0, claudeTimer;
+  claudeMascot.addEventListener('click', () => {
+    bubble.textContent = CLAUDE_PHRASES[claudeIdx % CLAUDE_PHRASES.length];
+    claudeIdx++;
+    bubble.classList.add('show');
+    clearTimeout(claudeTimer);
+    claudeTimer = setTimeout(() => bubble.classList.remove('show'), 2500);
+  });
 }
 
 /* === Кнопка "Дома" — сцена сна === */
