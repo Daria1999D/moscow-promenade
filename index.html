@@ -488,12 +488,12 @@
   .dino-wrap svg { display: block; }
   .dino-wrap.ilya {
     left: 16px;
-    animation: ilya-cycle 22s ease-in-out infinite;
+    animation: ilya-cycle 28s ease-in-out infinite;
     animation-delay: 6s;
   }
   .dino-wrap.daria {
     right: 16px;
-    animation: daria-cycle 22s ease-in-out infinite;
+    animation: daria-cycle 28s ease-in-out infinite;
     animation-delay: 6s;
   }
   .dino-wrap.ilya svg { transform: scaleX(-1); }
@@ -501,60 +501,70 @@
   .dino-wrap.ilya { transform-origin: 50% 100%; }
   .dino-wrap.daria { transform-origin: 50% 100%; }
   @keyframes ilya-cycle {
-    0%, 5% { transform: translateX(0); }
-    /* Walk to face-off — close to center */
-    18%, 24% { transform: translateX(calc(50vw - 115px)); }
-    /* Fight: 4 face-to-face bumps */
-    26% { transform: translateX(calc(50vw - 115px)) translateY(-7px); }
-    28% { transform: translateX(calc(50vw - 110px)) translateY(0); }
-    30% { transform: translateX(calc(50vw - 115px)) translateY(-7px); }
-    32% { transform: translateX(calc(50vw - 110px)) translateY(0); }
-    34% { transform: translateX(calc(50vw - 115px)) translateY(-7px); }
-    36% { transform: translateX(calc(50vw - 110px)) translateY(0); }
-    38% { transform: translateX(calc(50vw - 115px)) translateY(-7px); }
-    40% { transform: translateX(calc(50vw - 110px)) translateY(0); }
-    /* Daria leaps over and lands on Ilya — Ilya gets squished */
-    44% { transform: translateX(calc(50vw - 115px)) translateY(0) scaleY(1); }
-    50% { transform: translateX(calc(50vw - 115px)) translateY(8px) scaleY(0.78); }
-    52% { transform: translateX(calc(50vw - 115px)) translateY(12px) scaleY(0.7); }
-    54% { transform: translateX(calc(50vw - 115px)) translateY(8px) scaleY(0.78); }
-    56% { transform: translateX(calc(50vw - 115px)) translateY(0) scaleY(1); }
-    /* Daria zooms left, Ilya surprised */
-    60% { transform: translateX(calc(50vw - 115px)) translateY(-8px) scaleY(1); }
-    62% { transform: translateX(calc(50vw - 115px)) translateY(0) scaleY(1); }
-    /* Ilya lurches left after Daria */
-    68% { transform: translateX(calc(20vw - 60px)) scaleY(1); }
-    72% { transform: translateX(calc(20vw - 60px)) scaleY(1); }
-    /* Walk back home */
-    85%, 100% { transform: translateX(0) scaleY(1); }
+    /* IDLE */
+    0%, 4% { transform: translateX(0); }
+    /* WALK to face-off */
+    12%, 18% { transform: translateX(calc(50vw - 115px)); }
+    /* FIGHT — 3 bumps */
+    20% { transform: translateX(calc(50vw - 115px)) translateY(-7px); }
+    22% { transform: translateX(calc(50vw - 110px)) translateY(0); }
+    24% { transform: translateX(calc(50vw - 115px)) translateY(-7px); }
+    26% { transform: translateX(calc(50vw - 110px)) translateY(0); }
+    28% { transform: translateX(calc(50vw - 115px)) translateY(-7px); }
+    30% { transform: translateX(calc(50vw - 110px)) translateY(0); }
+    /* SQUISH — Daria lands on him */
+    34% { transform: translateX(calc(50vw - 115px)) translateY(10px) scaleY(0.75); }
+    37% { transform: translateX(calc(50vw - 115px)) translateY(12px) scaleY(0.7); }
+    40% { transform: translateX(calc(50vw - 115px)) translateY(8px) scaleY(0.8); }
+    /* HUG — Ilya wiggles trying to escape */
+    43% { transform: translateX(calc(50vw - 115px)) translateY(0) scaleY(1); }
+    45% { transform: translateX(calc(50vw - 110px)); }
+    47% { transform: translateX(calc(50vw - 120px)); }
+    49% { transform: translateX(calc(50vw - 108px)); }
+    51% { transform: translateX(calc(50vw - 122px)); }
+    53% { transform: translateX(calc(50vw - 110px)) translateY(-5px); }
+    /* ESCAPE — Ilya breaks free leftward */
+    58% { transform: translateX(calc(35vw - 70px)) translateY(-3px); }
+    62% { transform: translateX(calc(20vw - 50px)) translateY(-10px); }
+    /* TAG — chase mid-air */
+    66% { transform: translateX(calc(20vw - 50px)) translateY(-22vh); }
+    72% { transform: translateX(calc(15vw - 30px)) translateY(-30vh); }
+    76% { transform: translateX(calc(10vw)) translateY(-15vh); }
+    /* HOME */
+    84% { transform: translateX(calc(5vw)) translateY(-5vh); }
+    92%, 100% { transform: translateX(0) translateY(0); }
   }
   @keyframes daria-cycle {
-    0%, 5% { transform: translateX(0); }
-    /* Walk to face-off, close to Ilya */
-    18%, 24% { transform: translateX(calc(-50vw + 90px)); }
-    /* Fight: 4 face-to-face bumps */
-    26% { transform: translateX(calc(-50vw + 90px)) translateY(-9px); }
-    28% { transform: translateX(calc(-50vw + 85px)) translateY(0); }
-    30% { transform: translateX(calc(-50vw + 90px)) translateY(-9px); }
-    32% { transform: translateX(calc(-50vw + 85px)) translateY(0); }
-    34% { transform: translateX(calc(-50vw + 90px)) translateY(-9px); }
-    36% { transform: translateX(calc(-50vw + 85px)) translateY(0); }
-    38% { transform: translateX(calc(-50vw + 90px)) translateY(-9px); }
-    40% { transform: translateX(calc(-50vw + 85px)) translateY(0); }
-    /* JUMP on Ilya — leaps up, over, lands on him */
-    43% { transform: translateX(calc(-50vw + 70px)) translateY(-25px); }
-    46% { transform: translateX(calc(-50vw + 50px)) translateY(-40px); }   /* peak above */
-    49% { transform: translateX(calc(-50vw + 25px)) translateY(-25px); }
-    52% { transform: translateX(calc(-50vw + 5px)) translateY(-12px); }    /* on Ilya */
-    54% { transform: translateX(calc(-50vw + 5px)) translateY(-18px); }    /* bounce up */
-    56% { transform: translateX(calc(-50vw + 5px)) translateY(-12px); }    /* settle */
-    /* Daria zooms LEFT, all the way */
-    60% { transform: translateX(calc(-90vw + 80px)) translateY(0); }
-    66% { transform: translateX(calc(-90vw + 80px)); }
-    /* Daria runs back home */
-    78% { transform: translateX(0); }
-    /* Idle */
-    90%, 100% { transform: translateX(0); }
+    0%, 4% { transform: translateX(0); }
+    /* WALK to face-off */
+    12%, 18% { transform: translateX(calc(-50vw + 90px)); }
+    /* FIGHT bumps */
+    20% { transform: translateX(calc(-50vw + 90px)) translateY(-9px); }
+    22% { transform: translateX(calc(-50vw + 85px)) translateY(0); }
+    24% { transform: translateX(calc(-50vw + 90px)) translateY(-9px); }
+    26% { transform: translateX(calc(-50vw + 85px)) translateY(0); }
+    28% { transform: translateX(calc(-50vw + 90px)) translateY(-9px); }
+    30% { transform: translateX(calc(-50vw + 85px)) translateY(0); }
+    /* JUMP on Ilya */
+    33% { transform: translateX(calc(-50vw + 70px)) translateY(-25px); }
+    36% { transform: translateX(calc(-50vw + 40px)) translateY(-45px); }
+    39% { transform: translateX(calc(-50vw + 15px)) translateY(-25px); }
+    /* HUG — Daria settles ON Ilya */
+    42% { transform: translateX(calc(-50vw + 5px)) translateY(-12px); }
+    45% { transform: translateX(calc(-50vw + 5px)) translateY(-15px); }
+    48% { transform: translateX(calc(-50vw + 5px)) translateY(-13px); }
+    51% { transform: translateX(calc(-50vw + 5px)) translateY(-15px); }
+    53% { transform: translateX(calc(-50vw + 5px)) translateY(-10px); }
+    /* CHASE — Ilya escaped, Daria follows */
+    58% { transform: translateX(calc(-30vw + 50px)) translateY(-12px); }
+    62% { transform: translateX(calc(-20vw + 40px)) translateY(-22vh); }
+    /* TAG mid-air */
+    66% { transform: translateX(calc(-50vw + 50px)) translateY(-32vh); }
+    72% { transform: translateX(calc(-85vw + 80px)) translateY(-28vh); }
+    76% { transform: translateX(calc(-50vw + 80px)) translateY(-15vh); }
+    /* HOME */
+    84% { transform: translateX(calc(-15vw + 50px)) translateY(-5vh); }
+    92%, 100% { transform: translateX(0) translateY(0); }
   }
   @media (max-width: 600px) {
     .dino-wrap.ilya svg { width: 88px; height: auto; }
