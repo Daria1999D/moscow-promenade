@@ -320,9 +320,84 @@
   .card.branch-b1 .tag { color: #8e44ad; border-color: #8e44ad; }
   .card.branch-b2 .tag { color: #a04060; border-color: #a04060; }
 
+  /* Стартовое приглашение */
+  .invite-screen {
+    position: fixed; inset: 0;
+    background: var(--bg);
+    z-index: 9000;
+    display: flex; align-items: center; justify-content: center;
+    padding: 24px;
+    overflow: hidden;
+    transition: opacity .6s ease;
+  }
+  .invite-screen.hidden { opacity: 0; pointer-events: none; }
+  .invite-card {
+    max-width: 580px; width: 100%; text-align: center;
+    position: relative;
+  }
+  .invite-card .kicker {
+    font-family: 'Mono', monospace;
+    font-size: 12px; text-transform: uppercase; letter-spacing: 0.25em;
+    color: var(--accent); margin-bottom: 18px;
+  }
+  .invite-card h1 {
+    font-family: 'BluescreensCnd', sans-serif;
+    font-size: 88px; line-height: 0.88; margin: 0 0 26px;
+    font-weight: 700; text-transform: uppercase; letter-spacing: 0.005em;
+    color: var(--ink);
+  }
+  .invite-meta {
+    font-family: 'Mono', monospace;
+    font-size: 13px; color: var(--ink); margin-bottom: 26px;
+    line-height: 1.7; text-transform: uppercase; letter-spacing: 0.05em;
+  }
+  .invite-meta div + div::before { content: '· '; opacity: .5; }
+  .invite-card p {
+    font-size: 16px; color: var(--ink-soft);
+    margin: 0 auto 36px; max-width: 480px; line-height: 1.5;
+  }
+  .invite-buttons {
+    display: flex; gap: 14px; justify-content: center; flex-wrap: wrap;
+  }
+  .invite-buttons button {
+    font-family: 'Bluescreens', sans-serif;
+    font-size: 14px; padding: 16px 28px;
+    text-transform: uppercase; letter-spacing: 0.04em;
+    cursor: pointer; transition: all .2s;
+  }
+  .btn-accept {
+    background: var(--accent); color: var(--bg);
+    border: 2px solid var(--accent);
+  }
+  .btn-accept:hover { background: var(--accent-hi); border-color: var(--accent-hi); }
+  .btn-decline {
+    background: transparent; color: var(--ink);
+    border: 2px solid var(--ink);
+    transition: left .25s ease, top .25s ease, background .15s, color .15s;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .btn-decline:hover { background: var(--ink); color: var(--bg); }
+  .escape-hint {
+    margin-top: 32px;
+    font-family: 'Mono', monospace; font-size: 11px;
+    color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em;
+    opacity: 0; transition: opacity .4s;
+  }
+  .escape-hint.visible { opacity: 1; }
+  @media (max-width: 820px) {
+    .invite-card h1 { font-size: 48px; }
+    .invite-card .kicker { font-size: 10px; }
+    .invite-card p { font-size: 14px; }
+    .invite-meta { font-size: 11px; }
+    .invite-meta div + div::before { content: ''; }
+    .invite-buttons { flex-direction: column; }
+    .invite-buttons button { width: 100%; }
+  }
+
   /* Сирень — фон и падающие лепестки */
   .lilac-bg {
-    position: fixed; inset: 0; pointer-events: none; z-index: 0;
+    position: fixed; inset: 0; pointer-events: none; z-index: 9001;
     overflow: hidden;
   }
   .lilac-cluster { position: absolute; opacity: 0.55; }
@@ -331,7 +406,7 @@
   .lc-3 { right: -30px; bottom: 30%; width: 200px; transform: rotate(-25deg); opacity: 0.4; }
 
   .petals {
-    position: fixed; inset: 0; pointer-events: none; z-index: 1;
+    position: fixed; inset: 0; pointer-events: none; z-index: 9002;
     overflow: hidden;
   }
   .petal {
@@ -404,6 +479,24 @@
 </style>
 </head>
 <body>
+<div id="invite-screen" class="invite-screen">
+  <div class="invite-card">
+    <div class="kicker">приглашение</div>
+    <h1>Приглашаю<br>на променад</h1>
+    <div class="invite-meta">
+      <div>1 мая 2026 · пятница</div>
+      <div>13:00 · Чтиво Дом</div>
+      <div>Зубовский бул., 2с7</div>
+    </div>
+    <p>Кино «Гуру», прогулка по Москве, заходы в скрытые дворы и бары. Финиш на Страстном бульваре, 12к1.</p>
+    <div class="invite-buttons">
+      <button class="btn-accept">принять приглашение</button>
+      <button class="btn-decline">отказаться</button>
+    </div>
+    <div class="escape-hint" id="escape-hint">кнопку поймать не получится</div>
+  </div>
+</div>
+
 <div class="lilac-bg" aria-hidden="true">
   <svg class="lilac-cluster lc-1" viewBox="0 0 220 320" xmlns="http://www.w3.org/2000/svg">
     <path d="M115 320 Q108 260 112 200 Q112 160 108 130" stroke="#637048" stroke-width="2.8" fill="none" stroke-linecap="round"/>
@@ -1106,6 +1199,72 @@ widget.querySelector('.widget-header').addEventListener('click', e => {
 });
 
 renderCards();
+
+/* === Стартовое приглашение с убегающей кнопкой === */
+const inviteScreen = document.getElementById('invite-screen');
+const btnAccept = document.querySelector('.btn-accept');
+const btnDecline = document.querySelector('.btn-decline');
+const escapeHint = document.getElementById('escape-hint');
+
+if (localStorage.getItem('invite-accepted') === '1') {
+  inviteScreen.style.display = 'none';
+}
+
+btnAccept.addEventListener('click', () => {
+  localStorage.setItem('invite-accepted', '1');
+  inviteScreen.classList.add('hidden');
+  setTimeout(() => { inviteScreen.style.display = 'none'; }, 600);
+});
+
+let escapeCount = 0;
+function escapeDecline(awayFromX, awayFromY) {
+  const w = window.innerWidth, h = window.innerHeight;
+  const bw = btnDecline.offsetWidth || 200;
+  const bh = btnDecline.offsetHeight || 50;
+  const margin = 16;
+  let nx, ny, tries = 0;
+  do {
+    nx = margin + Math.random() * (w - bw - margin*2);
+    ny = margin + Math.random() * (h - bh - margin*2);
+    tries++;
+    if (awayFromX !== undefined) {
+      const dx = (nx + bw/2) - awayFromX;
+      const dy = (ny + bh/2) - awayFromY;
+      if (Math.hypot(dx, dy) < 200 && tries < 8) continue;
+    }
+    break;
+  } while (true);
+  btnDecline.style.position = 'fixed';
+  btnDecline.style.left = nx + 'px';
+  btnDecline.style.top = ny + 'px';
+  btnDecline.style.right = 'auto';
+  btnDecline.style.bottom = 'auto';
+  escapeCount++;
+  if (escapeCount === 1) escapeHint.classList.add('visible');
+  if (escapeCount >= 5) escapeHint.textContent = 'может всё-таки примешь?';
+  if (escapeCount >= 10) escapeHint.textContent = 'упорно. но я тоже упорна';
+}
+
+document.addEventListener('mousemove', e => {
+  if (inviteScreen.classList.contains('hidden')) return;
+  if (inviteScreen.style.display === 'none') return;
+  const r = btnDecline.getBoundingClientRect();
+  const cx = r.left + r.width/2;
+  const cy = r.top + r.height/2;
+  const d = Math.hypot(e.clientX - cx, e.clientY - cy);
+  if (d < 90) escapeDecline(e.clientX, e.clientY);
+});
+
+btnDecline.addEventListener('touchstart', e => {
+  e.preventDefault();
+  const t = e.touches[0];
+  escapeDecline(t.clientX, t.clientY);
+}, { passive: false });
+
+btnDecline.addEventListener('click', e => {
+  e.preventDefault();
+  escapeDecline();
+});
 </script>
 </body>
 </html>
