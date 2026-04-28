@@ -211,6 +211,41 @@
   .landmark .speak-btn.playing::before { content: '⏸ '; }
   .landmark .speak-btn:not(.playing)::before { content: '▶ '; }
 
+  /* Рецепты коктейлей */
+  .card .show-recipes {
+    background: transparent; border: 1px solid var(--accent);
+    padding: 5px 10px; font-size: 11px; cursor: pointer;
+    color: var(--accent); font-family: 'Mono', monospace;
+    text-transform: uppercase; letter-spacing: 0.05em; font-weight: 500;
+    -webkit-tap-highlight-color: transparent;
+    transition: all .15s;
+  }
+  .card .show-recipes:hover { background: var(--accent); color: var(--bg); }
+  .card .show-recipes.open { background: var(--accent); color: var(--bg); }
+  .recipes {
+    background: #faf3e6;
+    border-top: 1px solid var(--line);
+    padding: 0;
+  }
+  .recipe {
+    padding: 14px 20px;
+    border-top: 1px dashed #d8cfc3;
+  }
+  .recipe:first-child { border-top: none; }
+  .recipe h4 {
+    font-family: 'Bluescreens', sans-serif;
+    font-size: 15px; font-weight: 700;
+    margin: 0 0 6px;
+    text-transform: uppercase; letter-spacing: 0.01em;
+    color: var(--accent);
+  }
+  .recipe p {
+    margin: 0; font-size: 13px;
+    color: #4a3a26;
+    line-height: 1.55;
+    font-family: 'Mono', monospace;
+  }
+
   .branch-selector {
     background: var(--ink); color: var(--bg);
     padding: 28px 24px;
@@ -696,23 +731,25 @@
     90%, 100% { opacity: 1; }
   }
 
-  /* Кнопка "Дома" */
+  /* Кнопка "Дома" — отдельный блок после финиша */
   .btn-home {
-    position: fixed;
-    bottom: 24px; left: 50%; transform: translateX(-50%);
-    z-index: 9100;
-    padding: 14px 32px;
+    display: none;
+    width: 100%; box-sizing: border-box;
+    margin: 28px 0 0;
+    padding: 22px 32px;
     background: var(--ink); color: var(--bg);
     border: 2px solid var(--ink);
     font-family: 'Bluescreens', sans-serif;
-    font-size: 14px; font-weight: 700;
-    text-transform: uppercase; letter-spacing: 0.06em;
+    font-size: 18px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.05em;
     cursor: pointer;
     transition: all 0.2s;
     -webkit-tap-highlight-color: transparent;
+    text-align: center;
   }
   .btn-home:hover { background: var(--accent); border-color: var(--accent); }
-  .btn-home::before { content: '⌂ '; }
+  .btn-home::before { content: '⌂  '; }
+  body.has-finish .btn-home { display: block; }
   body.home-mode .btn-home { opacity: 0; pointer-events: none; transition: opacity .5s; }
 
   /* Затемнение сцены */
@@ -890,6 +927,11 @@
   .dino-wrap.ilya .wine-glass { bottom: 22px; right: -6px; }
   .dino-wrap.daria .wine-glass { bottom: 26px; left: -6px; }
   .dino-wrap.sitting .wine-glass { opacity: 1; }
+  @media (max-width: 600px) {
+    .wine-glass { width: 7px; height: 12px; }
+    .dino-wrap.ilya .wine-glass { bottom: 16px; right: -4px; }
+    .dino-wrap.daria .wine-glass { bottom: 20px; left: -4px; }
+  }
 
   /* Чокаются — встречные наклоны к друг другу */
   .dino-wrap.ilya.drinking .wine-glass {
@@ -1541,7 +1583,8 @@ const BRANCHES = {
       { n: 5, lat: 55.7510, lng: 37.6098,
         name: "Бар «Кабинет психолога»",
         tag: "🍷 бар",
-        desc: "Староваганьковский, 19 с3. Концепт-бар с «терапевтической» эстетикой — у них коктейли названы как эмоции/диагнозы. По пути — Храм Христа Спасителя, Патриарший мост, ГМИИ, Дом Пашкова. <b>Что брать:</b> Илье — <b>«Радость»</b>, Дарье — <b>«Страх»</b>. 30–40 мин." },
+        desc: "Староваганьковский, 19 с3. Концепт-бар с «терапевтической» эстетикой — у них коктейли названы как эмоции/диагнозы. По пути — Храм Христа Спасителя, Патриарший мост, ГМИИ, Дом Пашкова. <b>Что брать:</b> Илье — <b>«Радость»</b>, Дарье — <b>«Страх»</b>. 30–40 мин.",
+        recipes: ['Радость', 'Страх'] },
       { n: 6, lat: 55.7556, lng: 37.6126,
         name: "Дворик Моховая, 9 с24",
         tag: "🌿 двор",
@@ -1549,23 +1592,28 @@ const BRANCHES = {
       { n: 7, lat: 55.7567, lng: 37.6034,
         name: "Leveldva (краул 1)",
         tag: "🍸 краул",
-        desc: "Б. Никитская, 12. Разведка — пробуем на месте. <b>Что брать:</b> Negroni или авторский коктейль дня (попроси у бармена сигнатурный). 1 коктейль и идём." },
+        desc: "Б. Никитская, 12. Разведка — пробуем на месте. <b>Что брать:</b> Negroni или авторский коктейль дня (попроси у бармена сигнатурный). 1 коктейль и идём.",
+        recipes: ['Negroni'] },
       { n: 8, lat: 55.7593, lng: 37.6045,
         name: "«Маяк» (краул 2)",
         tag: "🥃 краул",
-        desc: "Б. Никитская, 19/13, 2 этаж. Подъезд жилого дома, скрипучая лестница. Графинчик хреновухи + бутер с килькой. 20 мин." },
+        desc: "Б. Никитская, 19/13, 2 этаж. Подъезд жилого дома, скрипучая лестница. Графинчик хреновухи + бутер с килькой. 20 мин.",
+        recipes: ['Хреновуха', 'Клюковка', 'Анисовка'] },
       { n: 9, lat: 55.7591, lng: 37.6017,
         name: "«Винный базар» (краул 3)",
         tag: "🍷 краул",
-        desc: "Никитский бул., 12 (на месте бывшего «Жан-Жака»). <b>Что брать:</b> бокал натурального вина — попроси сомелье российское красное или белое из Краснодарского края. Или джин-тоник с домашним тоником. 30 мин." },
+        desc: "Никитский бул., 12 (на месте бывшего «Жан-Жака»). <b>Что брать:</b> бокал натурального вина — попроси сомелье российское красное или белое из Краснодарского края. Или джин-тоник с домашним тоником. 30 мин.",
+        recipes: ['Натуральное вино', 'Джин-тоник'] },
       { n: 10, lat: 55.7651, lng: 37.5916,
         name: "THE BIX",
         tag: "🍸 бар",
-        desc: "Большой Козихинский, 9/12 (Патрики). От Винного базара ~10 мин на запад через Спиридоновку и Малую Бронную. <b>Что брать:</b> сигнатурный коктейль (попроси у бармена «фирменный»), или Negroni / Old Fashioned — классика проверенная. 30 мин." },
+        desc: "Большой Козихинский, 9/12 (Патрики). От Винного базара ~10 мин на запад через Спиридоновку и Малую Бронную. <b>Что брать:</b> сигнатурный коктейль (попроси у бармена «фирменный»), или Negroni / Old Fashioned — классика проверенная. 30 мин.",
+        recipes: ['Negroni', 'Old Fashioned'] },
       { n: 11, lat: 55.7660, lng: 37.6098,
         name: "Бар «Легендар»",
         tag: "🍸 бар",
-        desc: "Малая Дмитровка, 4. Финальный бар у Пушкинской площади. От THE BIX через Сытинский переулок. <b>Что брать:</b> Илье — <b>«Перун»</b>, Дарье — <b>«Пасечник»</b> (фирменные коктейли заведения). Закрытый аккорд вечера." },
+        desc: "Малая Дмитровка, 4. Финальный бар у Пушкинской площади. От THE BIX через Сытинский переулок. <b>Что брать:</b> Илье — <b>«Перун»</b>, Дарье — <b>«Пасечник»</b> (фирменные коктейли заведения). Закрытый аккорд вечера.",
+        recipes: ['Перун', 'Пасечник'] },
       { n: 12, lat: 55.7657, lng: 37.6077,
         name: "Страстной бульвар, 12к1",
         tag: "🏁 финиш",
@@ -1613,7 +1661,8 @@ const BRANCHES = {
       { n: 6, lat: 55.7494, lng: 37.6033,
         name: "Диктатура Эстетики",
         tag: "🍸 бар",
-        desc: "Гоголевский бульвар, 17. Авторский бар. <b>Что брать:</b> сигнатурный коктейль на джине или виски (травный профиль), либо настойка собственного производства. 30–60 мин. Дальше — развилка." }
+        desc: "Гоголевский бульвар, 17. Авторский бар. <b>Что брать:</b> сигнатурный коктейль на джине или виски (травный профиль), либо настойка собственного производства. 30–60 мин. Дальше — развилка.",
+        recipes: ['Авторская настойка'] }
     ],
     subBranches: {
       b1: {
@@ -1627,15 +1676,18 @@ const BRANCHES = {
           { n: 7, lat: 55.7610, lng: 37.5807,
             name: "Царская рюмочная",
             tag: "🥃 бар",
-            desc: "Новинский бульвар, 12. Рюмочная в стилистике рубежа XIX–XX вв. <b>Что брать:</b> рюмка рябиновки или клюковки (50 мл) + бутерброд с салом и чёрным хлебом. Альтернатива — перцовка с солёным огурцом." },
+            desc: "Новинский бульвар, 12. Рюмочная в стилистике рубежа XIX–XX вв. <b>Что брать:</b> рюмка рябиновки или клюковки (50 мл) + бутерброд с салом и чёрным хлебом. Альтернатива — перцовка с солёным огурцом.",
+            recipes: ['Рябиновка', 'Клюковка', 'Перцовка'] },
           { n: 8, lat: 55.7651, lng: 37.5916,
             name: "THE BIX",
             tag: "🍸 бар",
-            desc: "Большой Козихинский, 9/12 (Патрики). По дороге от Царской через Спиридоновку и Малую Бронную. <b>Что брать:</b> сигнатурный коктейль или Negroni / Old Fashioned." },
+            desc: "Большой Козихинский, 9/12 (Патрики). По дороге от Царской через Спиридоновку и Малую Бронную. <b>Что брать:</b> сигнатурный коктейль или Negroni / Old Fashioned.",
+            recipes: ['Negroni', 'Old Fashioned'] },
           { n: 9, lat: 55.7660, lng: 37.6098,
             name: "Бар «Легендар»",
             tag: "🍸 бар",
-            desc: "Малая Дмитровка, 4. Финальный бар у Пушкинской. От THE BIX через Сытинский переулок. <b>Что брать:</b> Илье — <b>«Перун»</b>, Дарье — <b>«Пасечник»</b> (фирменные коктейли)." },
+            desc: "Малая Дмитровка, 4. Финальный бар у Пушкинской. От THE BIX через Сытинский переулок. <b>Что брать:</b> Илье — <b>«Перун»</b>, Дарье — <b>«Пасечник»</b> (фирменные коктейли).",
+            recipes: ['Перун', 'Пасечник'] },
           { n: 10, lat: 55.7657, lng: 37.6100,
             name: "Страстной бульвар, 12к1",
             tag: "🏁 финиш",
@@ -1683,15 +1735,18 @@ const BRANCHES = {
           { n: 8, lat: 55.7585, lng: 37.6010,
             name: "«Винный базар»",
             tag: "🍷 бар",
-            desc: "Никитский бульвар, 12 (на месте бывшего «Жан-Жака»). <b>Что брать:</b> бокал натурального вина — спроси сомелье российское красное или белое из Краснодара. Или джин-тоник с домашним тоником." },
+            desc: "Никитский бульвар, 12 (на месте бывшего «Жан-Жака»). <b>Что брать:</b> бокал натурального вина — спроси сомелье российское красное или белое из Краснодара. Или джин-тоник с домашним тоником.",
+            recipes: ['Натуральное вино', 'Джин-тоник'] },
           { n: 9, lat: 55.7620, lng: 37.5965,
             name: "THE BIX",
             tag: "🍸 бар",
-            desc: "Большой Козихинский, 9/12 (Патрики). От Винного базара ~10 мин пешком на запад через Спиридоновку. <b>Что брать:</b> сигнатурный коктейль или Negroni / Old Fashioned." },
+            desc: "Большой Козихинский, 9/12 (Патрики). От Винного базара ~10 мин пешком на запад через Спиридоновку. <b>Что брать:</b> сигнатурный коктейль или Negroni / Old Fashioned.",
+            recipes: ['Negroni', 'Old Fashioned'] },
           { n: 10, lat: 55.7660, lng: 37.6090,
             name: "Бар «Легендар»",
             tag: "🍸 бар",
-            desc: "Малая Дмитровка, 4. Последний бар у Пушкинской. От THE BIX через Сытинский переулок. <b>Что брать:</b> Илье — <b>«Перун»</b>, Дарье — <b>«Пасечник»</b> (фирменные коктейли)." },
+            desc: "Малая Дмитровка, 4. Последний бар у Пушкинской. От THE BIX через Сытинский переулок. <b>Что брать:</b> Илье — <b>«Перун»</b>, Дарье — <b>«Пасечник»</b> (фирменные коктейли).",
+            recipes: ['Перун', 'Пасечник'] },
           { n: 11, lat: 55.7657, lng: 37.6100,
             name: "Страстной бульвар, 12к1",
             tag: "🏁 финиш",
@@ -1700,6 +1755,26 @@ const BRANCHES = {
       }
     }
   }
+};
+
+const RECIPES = {
+  'Negroni': '30 мл джина · 30 мл Campari · 30 мл красного вермута · цедра апельсина. Лёд, стакан-олд-фэшн.',
+  'Old Fashioned': '60 мл бурбона · 1 ч.л. сахарного сиропа · 2-3 капли ангостуры · цедра апельсина. Большой кубик льда.',
+  'Manhattan': '50 мл ржаного виски · 25 мл сладкого вермута · 2 капли ангостуры · вишенка коктейльная.',
+  'Whiskey Sour': '50 мл виски · 25 мл лимонного сока · 15 мл сахарного сиропа · белок одного яйца (по желанию). Шейк, со льдом.',
+  'Pastis': '30 мл анисовой настойки + 100 мл ледяной воды (мутнеет — «louche»). Подача со льдом.',
+  'Хреновуха': 'Водка 40% настоянная 7-10 дней на корне хрена с мёдом. Рюмка 50 мл, ледяная.',
+  'Клюковка': 'Водка настоянная 3-4 недели на клюкве с сахаром и цедрой лимона. 50 мл.',
+  'Рябиновка': 'Водка с красной рябиной обыкновенной, мёдом, кардамоном. Настаивается 2 недели. 50 мл.',
+  'Перцовка': 'Водка с перцем чили и мёдом. Настаивается 5-7 дней. 50 мл, обжигает.',
+  'Анисовка': 'Водка настоянная на семенах аниса. 50 мл, охлаждённая.',
+  'Натуральное вино': 'Бокал 150 мл российского — красное Цимлянское, белое из Усадьбы Дивноморское или Шато Тамань. Спросите рекомендацию сомелье.',
+  'Джин-тоник': '50 мл джина · 100 мл тоника · лёд · цедра огурца или лайма.',
+  'Авторская настойка': 'Травная настойка собственного производства бара (зверобой, мята, мелисса). 50 мл.',
+  'Радость': 'Авторский коктейль бара «Кабинет психолога». Точный состав — у бармена; обычно — на основе игристого с фруктовыми нотами.',
+  'Страх': 'Авторский коктейль бара «Кабинет психолога». Точный состав — у бармена; обычно — на тёмном алкоголе с горькими и дымными нотами.',
+  'Перун': 'Фирменный коктейль бара «Легендар». Состав на сайте бара — посмотри перед заказом.',
+  'Пасечник': 'Фирменный коктейль бара «Легендар» на основе мёда. Состав на сайте бара.'
 };
 
 const IMAGES = {
@@ -1724,6 +1799,7 @@ function renderCards() {
   cards.innerHTML = '';
   PREFIX.forEach(p => cards.appendChild(makeCard(p, 'prefix', 'p')));
   cards.appendChild(makeBranchSelector());
+  let hasFinish = false;
   if (activeBranch) {
     const b = BRANCHES[activeBranch];
     cards.appendChild(makeBranchActive(b));
@@ -1734,9 +1810,16 @@ function renderCards() {
         const sub = b.subBranches[activeSub];
         cards.appendChild(makeSubBranchActive(sub));
         sub.points.forEach(p => cards.appendChild(makeCard(p, `branch-${sub.key}`, sub.key)));
+        hasFinish = true;
       }
+    } else {
+      hasFinish = true;
     }
   }
+  // Перенести кнопку "Дома" в конец карточек после финиша
+  const homeBtn = document.getElementById('btn-home');
+  if (homeBtn && hasFinish) cards.appendChild(homeBtn);
+  document.body.classList.toggle('has-finish', hasFinish);
   refreshMap();
 }
 
@@ -1757,9 +1840,18 @@ function makeCard(p, cls, kind) {
           <span class="tag">${p.tag}</span>
           <button class="show-map" data-kind="${kind}" data-n="${p.n}">на карте →</button>
           ${hasLandmarks ? `<button class="show-landmarks" data-kind="${kind}" data-n="${p.n}">📚 истории (${p.landmarks.length})</button>` : ''}
+          ${p.recipes && p.recipes.length ? `<button class="show-recipes" data-kind="${kind}" data-n="${p.n}">🥂 рецепты (${p.recipes.length})</button>` : ''}
         </div>
       </div>
     </div>
+    ${p.recipes && p.recipes.length ? `<div class="recipes" hidden>
+      ${p.recipes.map(name => `
+        <div class="recipe">
+          <h4>${name}</h4>
+          <p>${RECIPES[name] || 'Состав уточняй у бармена.'}</p>
+        </div>
+      `).join('')}
+    </div>` : ''}
     ${hasLandmarks ? `<div class="landmarks" hidden>
       ${p.landmarks.map((lm, i) => `
         <div class="landmark" data-lm-idx="${i}">
@@ -1961,6 +2053,20 @@ document.addEventListener('click', e => {
     } else {
       block.removeAttribute('hidden');
       lmBtn.classList.add('open');
+      setTimeout(() => block.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 100);
+    }
+  }
+  const rcBtn = e.target.closest('.show-recipes');
+  if (rcBtn) {
+    const card = rcBtn.closest('.card');
+    const block = card.querySelector('.recipes');
+    const isOpen = !block.hasAttribute('hidden');
+    if (isOpen) {
+      block.setAttribute('hidden', '');
+      rcBtn.classList.remove('open');
+    } else {
+      block.removeAttribute('hidden');
+      rcBtn.classList.add('open');
       setTimeout(() => block.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 100);
     }
   }
