@@ -1412,9 +1412,6 @@
   </g>
 </svg>
 
-<!-- Кнопка "Дома" -->
-<button class="btn-home" id="btn-home">Дома</button>
-
 <!-- Затемнение -->
 <div class="dim-overlay" aria-hidden="true"></div>
 
@@ -1848,9 +1845,14 @@ function renderCards() {
       hasFinish = true;
     }
   }
-  // Перенести кнопку "Дома" в конец карточек после финиша
-  const homeBtn = document.getElementById('btn-home');
-  if (homeBtn && hasFinish) cards.appendChild(homeBtn);
+  // Создать кнопку "Дома" в конце карточек после финиша (заново при каждом рендере)
+  if (hasFinish) {
+    const homeBtn = document.createElement('button');
+    homeBtn.className = 'btn-home';
+    homeBtn.id = 'btn-home';
+    homeBtn.textContent = 'Дома';
+    cards.appendChild(homeBtn);
+  }
   document.body.classList.toggle('has-finish', hasFinish);
   refreshMap();
 }
@@ -2230,8 +2232,8 @@ if (localStorage.getItem('invite-accepted') === '1') {
 }
 
 /* === Кнопка "Дома" — сцена сна === */
-const btnHome = document.getElementById('btn-home');
-btnHome?.addEventListener('click', () => {
+document.addEventListener('click', (e) => {
+  if (!e.target.closest('.btn-home')) return;
   if (document.body.classList.contains('home-mode')) return;
   document.body.classList.add('home-mode');
   const ilya = document.querySelector('.dino-wrap.ilya');
