@@ -26,6 +26,15 @@
     --card: #ffffff;
     --line: #e4ded5;
     --ink-soft: #2a2a2a;
+    /* Точка встречи динозавров (учитывает их ширину + якорь) */
+    --meet-ilya: calc(50vw - 115px);
+    --meet-daria: calc(-50vw + 90px);
+  }
+  @media (max-width: 600px) {
+    :root {
+      --meet-ilya: calc(50vw - 93px);
+      --meet-daria: calc(-50vw + 74px);
+    }
   }
   * { box-sizing: border-box; }
   html, body { margin: 0; padding: 0; font-family: 'Neoris', system-ui, -apple-system, sans-serif; color: var(--ink); background: var(--bg); line-height: 1.45; font-size: 16px; }
@@ -269,11 +278,11 @@
   #map-widget {
     position: fixed;
     top: 16px; right: 16px;
-    width: 320px; height: 280px;
+    width: 240px; height: 320px;
     overflow: hidden;
-    box-shadow: 0 8px 28px rgba(25,25,25,.22);
+    box-shadow: 0 8px 28px rgba(25,25,25,.22), inset 0 0 0 4px #ede0c4;
     border: 1px solid var(--ink);
-    background: var(--bg);
+    background: #ede0c4;
     z-index: 1000;
     transition: top .25s, right .25s, width .25s, height .25s;
     display: flex; flex-direction: column;
@@ -313,6 +322,16 @@
   }
   .widget-btns a:hover, .widget-btns button:hover { background: var(--accent); }
   #map-frame { width: 100%; flex: 1; border: none; display: block; }
+  #map-svg { width: 100%; flex: 1; display: block; background: #ede0c4; }
+  #map-svg .street { stroke: #5c4830; stroke-width: 0.8; fill: none; opacity: 0.55; }
+  #map-svg .ring { stroke: #5c4830; stroke-width: 1.2; fill: none; opacity: 0.6; }
+  #map-svg .river { stroke: #7a9aab; stroke-width: 5; fill: none; stroke-linecap: round; opacity: 0.65; }
+  #map-svg .route { stroke: #d62916; stroke-width: 1.6; fill: none; stroke-dasharray: 3 2; stroke-linecap: round; stroke-linejoin: round; }
+  #map-svg .marker { cursor: pointer; }
+  #map-svg .marker circle { fill: #d62916; stroke: #ede0c4; stroke-width: 0.8; }
+  #map-svg .marker text { font-family: 'Mono', monospace; font-size: 4.5px; font-weight: 700; fill: #ede0c4; text-anchor: middle; pointer-events: none; }
+  #map-svg .label { font-family: 'Mono', monospace; font-size: 4.5px; fill: #5c4830; opacity: 0.7; pointer-events: none; }
+  #map-svg .caption { font-family: 'Mono', monospace; font-size: 5px; fill: #5c4830; opacity: 0.55; }
 
   .card.branch-b1:target, .card.branch-b1.active { border-color: #8e44ad; box-shadow: 0 0 0 1px #8e44ad; }
   .card.branch-b2:target, .card.branch-b2.active { border-color: #a04060; box-shadow: 0 0 0 1px #a04060; }
@@ -548,25 +567,25 @@
     /* IDLE */
     0%, 4% { transform: translateX(0); }
     /* WALK to face-off */
-    12%, 18% { transform: translateX(calc(50vw - 115px)); }
+    12%, 18% { transform: translateX(var(--meet-ilya)); }
     /* FIGHT — 3 bumps */
-    20% { transform: translateX(calc(50vw - 115px)) translateY(-7px); }
-    22% { transform: translateX(calc(50vw - 110px)) translateY(0); }
-    24% { transform: translateX(calc(50vw - 115px)) translateY(-7px); }
-    26% { transform: translateX(calc(50vw - 110px)) translateY(0); }
-    28% { transform: translateX(calc(50vw - 115px)) translateY(-7px); }
-    30% { transform: translateX(calc(50vw - 110px)) translateY(0); }
+    20% { transform: translateX(var(--meet-ilya)) translateY(-7px); }
+    22% { transform: translateX(calc(var(--meet-ilya) + 5px)) translateY(0); }
+    24% { transform: translateX(var(--meet-ilya)) translateY(-7px); }
+    26% { transform: translateX(calc(var(--meet-ilya) + 5px)) translateY(0); }
+    28% { transform: translateX(var(--meet-ilya)) translateY(-7px); }
+    30% { transform: translateX(calc(var(--meet-ilya) + 5px)) translateY(0); }
     /* SQUISH — Daria lands on him */
-    34% { transform: translateX(calc(50vw - 115px)) translateY(10px) scaleY(0.72); }
-    37% { transform: translateX(calc(50vw - 115px)) translateY(12px) scaleY(0.65); }
-    40% { transform: translateX(calc(50vw - 115px)) translateY(8px) scaleY(0.78); }
+    34% { transform: translateX(var(--meet-ilya)) translateY(10px) scaleY(0.72); }
+    37% { transform: translateX(var(--meet-ilya)) translateY(12px) scaleY(0.65); }
+    40% { transform: translateX(var(--meet-ilya)) translateY(8px) scaleY(0.78); }
     /* Daria jumps off — Ilya recovers */
-    44% { transform: translateX(calc(50vw - 115px)) translateY(2px) scaleY(0.95); }
+    44% { transform: translateX(var(--meet-ilya)) translateY(2px) scaleY(0.95); }
     /* Daria lands beside, начинает обнимать — снова сжимается */
-    48% { transform: translateX(calc(50vw - 115px)) translateY(0) scaleY(1); }
-    50% { transform: translateX(calc(50vw - 113px)) translateY(2px) scaleY(0.88); }   /* рукобхват */
-    52% { transform: translateX(calc(50vw - 117px)) translateY(4px) scaleY(0.78); }   /* крепкое объятие */
-    54% { transform: translateX(calc(50vw - 113px)) translateY(2px) scaleY(0.85); }   /* ослабляет */
+    48% { transform: translateX(var(--meet-ilya)) translateY(0) scaleY(1); }
+    50% { transform: translateX(calc(var(--meet-ilya) + 2px)) translateY(2px) scaleY(0.88); }   /* рукобхват */
+    52% { transform: translateX(calc(var(--meet-ilya) - 2px)) translateY(4px) scaleY(0.78); }   /* крепкое объятие */
+    54% { transform: translateX(calc(var(--meet-ilya) + 2px)) translateY(2px) scaleY(0.85); }   /* ослабляет */
     /* ESCAPE — Ilya breaks free leftward */
     56% { transform: translateX(calc(35vw - 70px)) translateY(-3px); }
     /* SALKI — Ilya runs left along ground */
@@ -588,35 +607,35 @@
   @keyframes daria-cycle {
     0%, 4% { transform: translateX(0); }
     /* WALK to face-off */
-    12%, 18% { transform: translateX(calc(-50vw + 90px)); }
+    12%, 18% { transform: translateX(var(--meet-daria)); }
     /* FIGHT bumps */
-    20% { transform: translateX(calc(-50vw + 90px)) translateY(-9px); }
-    22% { transform: translateX(calc(-50vw + 85px)) translateY(0); }
-    24% { transform: translateX(calc(-50vw + 90px)) translateY(-9px); }
-    26% { transform: translateX(calc(-50vw + 85px)) translateY(0); }
-    28% { transform: translateX(calc(-50vw + 90px)) translateY(-9px); }
-    30% { transform: translateX(calc(-50vw + 85px)) translateY(0); }
+    20% { transform: translateX(var(--meet-daria)) translateY(-9px); }
+    22% { transform: translateX(calc(var(--meet-daria) - 5px)) translateY(0); }
+    24% { transform: translateX(var(--meet-daria)) translateY(-9px); }
+    26% { transform: translateX(calc(var(--meet-daria) - 5px)) translateY(0); }
+    28% { transform: translateX(var(--meet-daria)) translateY(-9px); }
+    30% { transform: translateX(calc(var(--meet-daria) - 5px)) translateY(0); }
     /* JUMP on Ilya */
-    33% { transform: translateX(calc(-50vw + 70px)) translateY(-25px); }
-    36% { transform: translateX(calc(-50vw + 40px)) translateY(-45px); }
-    39% { transform: translateX(calc(-50vw + 15px)) translateY(-30px); }
+    33% { transform: translateX(calc(var(--meet-daria) - 20px)) translateY(-25px); }
+    36% { transform: translateX(calc(var(--meet-daria) - 50px)) translateY(-45px); }
+    39% { transform: translateX(calc(var(--meet-daria) - 75px)) translateY(-30px); }
     /* SQUISH — sits on Ilya briefly */
-    41% { transform: translateX(calc(-50vw + 5px)) translateY(-12px); }
+    41% { transform: translateX(calc(var(--meet-daria) - 85px)) translateY(-12px); }
     /* JUMPS OFF Ilya — to the right side */
-    44% { transform: translateX(calc(-50vw + 30px)) translateY(-25px); }
-    46% { transform: translateX(calc(-50vw + 70px)) translateY(-15px); }
-    48% { transform: translateX(calc(-50vw + 105px)) translateY(0); }     /* lands beside Ilya */
+    44% { transform: translateX(calc(var(--meet-daria) - 60px)) translateY(-25px); }
+    46% { transform: translateX(calc(var(--meet-daria) - 20px)) translateY(-15px); }
+    48% { transform: translateX(calc(var(--meet-daria) + 15px)) translateY(0); }     /* lands beside Ilya */
     /* HUG from beside — embraces Ilya */
-    50% { transform: translateX(calc(-50vw + 105px)) translateY(0); }
-    52% { transform: translateX(calc(-50vw + 105px)) translateY(-2px); }   /* tight squeeze */
-    54% { transform: translateX(calc(-50vw + 105px)) translateY(-1px); }
+    50% { transform: translateX(calc(var(--meet-daria) + 15px)) translateY(0); }
+    52% { transform: translateX(calc(var(--meet-daria) + 15px)) translateY(-2px); }   /* tight squeeze */
+    54% { transform: translateX(calc(var(--meet-daria) + 15px)) translateY(-1px); }
     /* Ilya escapes, Daria starts chase */
-    57% { transform: translateX(calc(-50vw + 110px)) translateY(-3px); }
+    57% { transform: translateX(calc(var(--meet-daria) + 20px)) translateY(-3px); }
     /* SALKI: Daria chases Ilya leftward */
     60% { transform: translateX(calc(-65vw + 92px)) translateY(0); }
     63% { transform: translateX(calc(-80vw + 92px)) translateY(0); }
     66% { transform: translateX(calc(-85vw + 92px)) translateY(-22vh); }
-    70% { transform: translateX(calc(-50vw + 92px)) translateY(-30vh); }
+    70% { transform: translateX(calc(var(--meet-daria) + 2px)) translateY(-30vh); }
     /* Daria runs home (rightward) — Ilya now chasing */
     74% { transform: translateX(calc(-25vw + 50px)) translateY(-15vh); }
     77% { transform: translateX(calc(-5vw)) translateY(-3vh); }
@@ -869,14 +888,61 @@
 
 <div id="map-widget">
   <div class="widget-header">
-    <div class="label"><span class="dot-live"></span>Яндекс.Карты</div>
+    <div class="label"><span class="dot-live"></span>план местности</div>
     <div class="widget-btns">
-      <a id="btn-open" href="#" target="_blank" title="Открыть в Яндекс.Картах">↗</a>
       <button id="btn-expand" title="Развернуть">⛶</button>
       <button id="btn-collapse" title="Свернуть">—</button>
     </div>
   </div>
-  <iframe id="map-frame" src=""></iframe>
+  <svg id="map-svg" viewBox="0 0 220 340" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <filter id="paper-grain" x="0" y="0" width="100%" height="100%">
+        <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" stitchTiles="stitch"/>
+        <feColorMatrix values="0 0 0 0 0.4  0 0 0 0 0.32  0 0 0 0 0.18  0 0 0 0.1 0"/>
+      </filter>
+    </defs>
+    <rect width="220" height="340" fill="#ede0c4"/>
+    <rect width="220" height="340" filter="url(#paper-grain)"/>
+
+    <!-- Москва-река (волна на юге) -->
+    <path class="river" d="M -10 305 Q 30 295 70 308 Q 110 320 150 305 Q 190 295 230 305"/>
+
+    <!-- Бульварное кольцо (плавная дуга через карту) -->
+    <path class="ring" d="M 60 235 Q 75 200 100 175 Q 130 145 160 110 Q 180 75 195 45"/>
+
+    <!-- Садовое кольцо (внешний контур) -->
+    <path class="ring" d="M 30 280 L 30 250 Q 30 200 50 160 Q 75 110 110 70 Q 145 35 195 30" stroke-dasharray="2 2"/>
+
+    <!-- Остоженка / Пречистенка (параллельные линии с юга на северо-восток) -->
+    <path class="street" d="M 40 285 Q 70 260 110 220 Q 130 195 145 170"/>
+    <path class="street" d="M 35 280 Q 65 250 100 215 Q 125 190 140 165"/>
+
+    <!-- Большая Никитская -->
+    <path class="street" d="M 130 145 Q 145 130 165 95"/>
+
+    <!-- Поварская -->
+    <path class="street" d="M 100 175 Q 115 145 140 115 Q 145 105 155 95"/>
+
+    <!-- Тверская (вертикальная) -->
+    <path class="street" d="M 175 35 Q 168 80 162 120 Q 158 165 152 200"/>
+
+    <!-- Гоголевский → Никитский → Тверской (бульварное кольцо детальнее) -->
+    <!-- Подписи -->
+    <text class="label" x="50" y="295" transform="rotate(-30 50 295)">Москва-река</text>
+    <text class="label" x="105" y="265">Остоженка</text>
+    <text class="label" x="80" y="240">Пречистенка</text>
+    <text class="label" x="115" y="180">Поварская</text>
+    <text class="label" x="155" y="135" transform="rotate(45 155 135)">Б. Никитская</text>
+    <text class="label" x="180" y="55" transform="rotate(60 180 55)">Тверская</text>
+
+    <!-- Caption -->
+    <text class="caption" x="8" y="332">МОСКВА · МАЙ 2026</text>
+    <text class="caption" x="200" y="14">N ↑</text>
+
+    <!-- Route + markers (generated dynamically) -->
+    <g id="map-route"></g>
+    <g id="map-markers"></g>
+  </svg>
 </div>
 
 <div class="dinos" aria-hidden="true">
@@ -1183,11 +1249,11 @@ const BRANCHES = {
           { n: 8, lat: 55.7620, lng: 37.5965,
             name: "THE BIX",
             tag: "🍸 бар",
-            desc: "Большой Козихинский, 9/12 (Патрики). По дороге от Царской через Спиридоновку и Малую Бронную — мимо особняка Тарасова, Патриарших прудов. Финальный бар-стоп перед Тверской." },
-          { n: 9, lat: 55.7625, lng: 37.6063,
-            name: "Тверская площадь",
-            tag: "📍 ориентир",
-            desc: "Памятник Долгорукому, мэрия." },
+            desc: "Большой Козихинский, 9/12 (Патрики). По дороге от Царской через Спиридоновку и Малую Бронную — мимо особняка Тарасова, Патриарших прудов." },
+          { n: 9, lat: 55.7660, lng: 37.6090,
+            name: "Бар «Легендар»",
+            tag: "🍸 бар",
+            desc: "Малая Дмитровка, 4. Финальный бар-стоп — у самой Пушкинской площади. От THE BIX через Спиридоновку и Сытинский переулок." },
           { n: 10, lat: 55.7657, lng: 37.6100,
             name: "Страстной бульвар, 12к1",
             tag: "🏁 финиш",
@@ -1239,11 +1305,11 @@ const BRANCHES = {
           { n: 9, lat: 55.7620, lng: 37.5965,
             name: "THE BIX",
             tag: "🍸 бар",
-            desc: "Большой Козихинский, 9/12 (Патрики). От Винного базара ~10 мин пешком на запад через Спиридоновку. Финальный бар-стоп." },
-          { n: 10, lat: 55.7625, lng: 37.6063,
-            name: "Тверская площадь",
-            tag: "📍 ориентир",
-            desc: "Памятник Долгорукому, мэрия." },
+            desc: "Большой Козихинский, 9/12 (Патрики). От Винного базара ~10 мин пешком на запад через Спиридоновку." },
+          { n: 10, lat: 55.7660, lng: 37.6090,
+            name: "Бар «Легендар»",
+            tag: "🍸 бар",
+            desc: "Малая Дмитровка, 4. Последний бар у самой Пушкинской площади. От THE BIX через Спиридоновку и Сытинский переулок." },
           { n: 11, lat: 55.7657, lng: 37.6100,
             name: "Страстной бульвар, 12к1",
             tag: "🏁 финиш",
@@ -1446,30 +1512,34 @@ function activePoints() {
   return pts;
 }
 
-function buildYandexEmbed(points, focusPoint) {
-  if (!points.length) points = PREFIX;
-  // pt format: lng,lat,style~lng,lat,style
-  const pt = points.map((p, i) => `${p.lng},${p.lat},pm2rdl${i+1}`).join('~');
-  // Compute center
-  const center = focusPoint || points[Math.floor(points.length / 2)];
-  const z = focusPoint ? 17 : 14;
-  return `https://yandex.ru/map-widget/v1/?ll=${center.lng}%2C${center.lat}&z=${z}&pt=${pt}&l=map`;
-}
-
-function buildYandexFull(points) {
-  if (!points.length) points = PREFIX;
-  const pt = points.map((p, i) => `${p.lng},${p.lat},pm2rdl${i+1}`).join('~');
-  // Pedestrian route via rtext (lat,lng order!)
-  const rtext = points.map(p => `${p.lat},${p.lng}`).join('~');
-  return `https://yandex.ru/maps/?pt=${pt}&rtext=${rtext}&rtt=pd`;
+const MAP_BOUNDS = { minLng: 37.580, maxLng: 37.615, minLat: 55.730, maxLat: 55.770 };
+function mapProject(lat, lng) {
+  const x = (lng - MAP_BOUNDS.minLng) / (MAP_BOUNDS.maxLng - MAP_BOUNDS.minLng) * 220;
+  const y = (MAP_BOUNDS.maxLat - lat) / (MAP_BOUNDS.maxLat - MAP_BOUNDS.minLat) * 340;
+  return { x, y };
 }
 
 function refreshMap(focusPoint) {
   const pts = activePoints();
-  const frame = document.getElementById('map-frame');
-  const newSrc = buildYandexEmbed(pts, focusPoint);
-  if (frame.src !== newSrc) frame.src = newSrc;
-  document.getElementById('btn-open').href = buildYandexFull(pts);
+  const route = document.getElementById('map-route');
+  const markers = document.getElementById('map-markers');
+  if (!route || !markers || !pts.length) return;
+  const proj = pts.map(p => mapProject(p.lat, p.lng));
+  // Smooth route as polyline
+  const d = proj.map((p, i) => `${i === 0 ? 'M' : 'L'} ${p.x.toFixed(1)} ${p.y.toFixed(1)}`).join(' ');
+  route.innerHTML = `<path class="route" d="${d}"/>`;
+  // Markers with numbers
+  let mh = '';
+  pts.forEach((p, i) => {
+    const xy = proj[i];
+    const isFocus = focusPoint && focusPoint.n === p.n && focusPoint.lat === p.lat;
+    const r = isFocus ? 6 : 4.5;
+    mh += `<g class="marker" data-n="${p.n}">
+      <circle cx="${xy.x.toFixed(1)}" cy="${xy.y.toFixed(1)}" r="${r}"/>
+      <text x="${xy.x.toFixed(1)}" y="${(xy.y + 1.6).toFixed(1)}">${p.n}</text>
+    </g>`;
+  });
+  markers.innerHTML = mh;
 }
 
 function focusCard(kind, n) {
