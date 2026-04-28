@@ -562,14 +562,19 @@
     51% { transform: translateX(calc(50vw - 122px)) translateY(4px) scaleY(0.78); }
     53% { transform: translateX(calc(50vw - 110px)) translateY(-3px) scaleY(0.95); }   /* почти вырвался */
     /* ESCAPE — Ilya breaks free leftward */
-    58% { transform: translateX(calc(35vw - 70px)) translateY(-3px); }
-    62% { transform: translateX(calc(20vw - 50px)) translateY(-10px); }
-    /* TAG — chase mid-air */
-    66% { transform: translateX(calc(20vw - 50px)) translateY(-22vh); }
-    72% { transform: translateX(calc(15vw - 30px)) translateY(-30vh); }
-    76% { transform: translateX(calc(10vw)) translateY(-15vh); }
-    /* HOME */
-    84% { transform: translateX(calc(5vw)) translateY(-5vh); }
+    56% { transform: translateX(calc(35vw - 70px)) translateY(-3px); }
+    /* TAG: бежит вдоль низа влево */
+    60% { transform: translateX(calc(15vw)) translateY(0); }
+    63% { transform: translateX(calc(-5vw)) translateY(0); }
+    /* Прыжок вверх-влево */
+    66% { transform: translateX(calc(-5vw)) translateY(-25vh); }
+    /* Полёт на правую сторону */
+    70% { transform: translateX(calc(35vw)) translateY(-35vh); }
+    74% { transform: translateX(calc(60vw)) translateY(-25vh); }
+    /* Спуск на середину правой части */
+    78% { transform: translateX(calc(50vw)) translateY(-5vh); }
+    /* Возвращение домой */
+    84% { transform: translateX(calc(20vw)) translateY(0); }
     92%, 100% { transform: translateX(0) translateY(0); }
   }
   @keyframes daria-cycle {
@@ -904,7 +909,7 @@
     </svg>
   </div>
   <div class="dino-wrap daria">
-    <svg viewBox="0 0 95 105" width="76" height="84" xmlns="http://www.w3.org/2000/svg">
+    <svg viewBox="0 0 95 105" width="76" height="84" xmlns="http://www.w3.org/2000/svg" style="overflow:visible">
       <!-- Дарья — детский ти-рекс, стоит вертикально, угловатый -->
       <!-- Хвост (вытянутый назад горизонтально) -->
       <path d="M 28 60 L 5 58 Q -2 62 0 68 Q 5 73 25 70 L 35 65 Z" fill="#3a7d96"/>
@@ -1140,8 +1145,8 @@ const BRANCHES = {
         ] },
       { n: 6, lat: 55.7488, lng: 37.6010,
         name: "Диктатура Эстетики",
-        tag: "🎨 арт",
-        desc: "Гоголевский бульвар, 17. Арт-пространство / концепт-бар. Закладываем 30–60 мин — посмотреть программу, выпить чего-нибудь. Дальше — развилка." }
+        tag: "🍸 бар",
+        desc: "Гоголевский бульвар, 17. Авторский бар. Закладываем 30–60 мин — выпить, перекусить, посмотреть атмосферу. Дальше — развилка." }
     ],
     subBranches: {
       b1: {
