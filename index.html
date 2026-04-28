@@ -695,6 +695,74 @@
     90%, 100% { opacity: 1; }
   }
 
+  /* «Сидячая» сцена: после 2 циклов — садятся под сиренью с бокалами вина */
+  .dino-wrap.sitting {
+    animation: none !important;
+    transition: left 1.5s ease-out, right 1.5s ease-out, transform 1.5s ease-out;
+  }
+  .dino-wrap.sitting svg.dino-svg, .dino-wrap.sitting > svg:first-of-type {
+    animation: none !important;
+    transform: scaleX(-1) !important;
+  }
+  .dino-wrap.ilya.sitting {
+    left: 40px; bottom: 14px; transform: none !important;
+  }
+  .dino-wrap.daria.sitting {
+    left: 130px; right: auto; bottom: 14px; transform: none !important;
+  }
+  .dino-wrap.sitting .lilac-gift-svg {
+    animation: none !important;
+    transition: opacity 1s ease-out;
+  }
+  .dino-wrap.ilya.sitting .lilac-gift-svg { opacity: 1; }
+  .dino-wrap.ilya.sitting.gave-lilac .lilac-gift-svg { opacity: 0; }
+  .dino-wrap.daria.sitting .lilac-gift-svg { opacity: 0; }
+  .dino-wrap.daria.sitting.received-lilac .lilac-gift-svg { opacity: 1; }
+
+  /* Большая ветка сирени над сидящими */
+  .sitting-lilac {
+    position: fixed;
+    left: 0; bottom: 80px;
+    width: 200px; height: 220px;
+    pointer-events: none;
+    z-index: 7900;
+    opacity: 0;
+    transition: opacity 1.5s ease-out;
+  }
+  .sitting-lilac.visible { opacity: 0.85; }
+
+  /* Бокалы вина */
+  .wine-glass {
+    position: absolute;
+    width: 16px; height: 26px;
+    opacity: 0;
+    transition: opacity 1s ease-out;
+    pointer-events: none;
+  }
+  .dino-wrap.ilya .wine-glass { bottom: 18px; right: -10px; }
+  .dino-wrap.daria .wine-glass { bottom: 22px; left: -10px; }
+  .dino-wrap.sitting .wine-glass { opacity: 1; }
+
+  /* Глоток */
+  .dino-wrap.drinking .wine-glass {
+    animation: take-sip 1.8s ease-in-out;
+  }
+  @keyframes take-sip {
+    0% { transform: translateY(0) rotate(0); }
+    25% { transform: translateY(-18px) rotate(-15deg); }
+    55% { transform: translateY(-18px) rotate(-30deg); }
+    75% { transform: translateY(-18px) rotate(-15deg); }
+    100% { transform: translateY(0) rotate(0); }
+  }
+  /* Голова чуть откидывается при глотке */
+  .dino-wrap.drinking > svg:first-of-type {
+    animation: head-tip 1.8s ease-in-out !important;
+  }
+  @keyframes head-tip {
+    0%, 100% { transform: scaleX(-1); }
+    45%, 65% { transform: scaleX(-1) translateY(-2px) rotate(-3deg); }
+  }
+
   @media (max-width: 820px) {
     .wrap { padding: 20px 16px 80px; }
     header.hero { padding-right: 0; padding-top: 80px; padding-bottom: 16px; }
@@ -995,6 +1063,13 @@
         <circle cx="8" cy="3" r="0.7"/><circle cx="6" cy="5" r="0.6"/><circle cx="9" cy="7" r="0.6"/>
       </g>
     </svg>
+    <!-- Бокал Ильи -->
+    <svg class="wine-glass" viewBox="0 0 12 22" xmlns="http://www.w3.org/2000/svg">
+      <path d="M 2 2 Q 2 12 6 12 Q 10 12 10 2 Z" fill="#9c2535"/>
+      <ellipse cx="3.5" cy="5" rx="0.8" ry="2.2" fill="#fff" opacity="0.4"/>
+      <rect x="5.4" y="12" width="1.2" height="6" fill="#cba898"/>
+      <ellipse cx="6" cy="20" rx="3.5" ry="1" fill="#cba898"/>
+    </svg>
   </div>
   <div class="dino-wrap daria">
     <svg viewBox="0 0 95 105" width="76" height="84" xmlns="http://www.w3.org/2000/svg" style="overflow:visible">
@@ -1091,8 +1166,51 @@
         <circle cx="8" cy="3" r="0.7"/><circle cx="6" cy="5" r="0.6"/><circle cx="9" cy="7" r="0.6"/>
       </g>
     </svg>
+    <!-- Бокал Дарьи -->
+    <svg class="wine-glass" viewBox="0 0 12 22" xmlns="http://www.w3.org/2000/svg">
+      <path d="M 2 2 Q 2 12 6 12 Q 10 12 10 2 Z" fill="#9c2535"/>
+      <ellipse cx="3.5" cy="5" rx="0.8" ry="2.2" fill="#fff" opacity="0.4"/>
+      <rect x="5.4" y="12" width="1.2" height="6" fill="#cba898"/>
+      <ellipse cx="6" cy="20" rx="3.5" ry="1" fill="#cba898"/>
+    </svg>
   </div>
 </div>
+
+<!-- Большая ветка сирени над сидящими -->
+<svg class="sitting-lilac" viewBox="0 0 200 220" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+  <!-- Свисающая ветка из верха -->
+  <path d="M 5 0 Q 30 30 60 60 Q 90 90 120 130 Q 140 165 165 200" stroke="#637048" stroke-width="3" fill="none" stroke-linecap="round"/>
+  <!-- Листья на ветке -->
+  <ellipse cx="40" cy="50" rx="14" ry="6" fill="#7a8d54" transform="rotate(-30 40 50)"/>
+  <ellipse cx="80" cy="80" rx="13" ry="5" fill="#8aa367" transform="rotate(20 80 80)"/>
+  <ellipse cx="105" cy="120" rx="14" ry="6" fill="#6e8048" transform="rotate(-15 105 120)"/>
+  <ellipse cx="130" cy="155" rx="12" ry="5" fill="#7a8d54" transform="rotate(35 130 155)"/>
+  <!-- Кисти сирени (3 штуки) -->
+  <g transform="translate(60 65)">
+    <g fill="#5a3070" opacity="0.85">
+      <circle cx="0" cy="0" r="6"/><circle cx="-10" cy="6" r="6"/><circle cx="10" cy="8" r="6"/>
+      <circle cx="-5" cy="14" r="6"/><circle cx="8" cy="18" r="6"/>
+    </g>
+    <g fill="#9560a8" opacity="0.9"><circle cx="-2" cy="2" r="4"/><circle cx="-8" cy="10" r="4"/><circle cx="8" cy="12" r="4"/></g>
+    <g fill="#c98ac8"><circle cx="-3" cy="4" r="2"/><circle cx="6" cy="14" r="2"/></g>
+  </g>
+  <g transform="translate(110 100)">
+    <g fill="#5a3070" opacity="0.85">
+      <circle cx="0" cy="0" r="7"/><circle cx="-12" cy="7" r="7"/><circle cx="12" cy="9" r="7"/>
+      <circle cx="-5" cy="18" r="7"/><circle cx="8" cy="22" r="7"/><circle cx="0" cy="30" r="6"/>
+    </g>
+    <g fill="#9560a8" opacity="0.9"><circle cx="-3" cy="2" r="5"/><circle cx="-10" cy="12" r="5"/><circle cx="10" cy="14" r="5"/><circle cx="0" cy="24" r="5"/></g>
+    <g fill="#c98ac8"><circle cx="-3" cy="4" r="2.5"/><circle cx="8" cy="16" r="2.5"/><circle cx="-2" cy="22" r="2"/></g>
+  </g>
+  <g transform="translate(150 175)">
+    <g fill="#5a3070" opacity="0.85">
+      <circle cx="0" cy="0" r="6"/><circle cx="-8" cy="8" r="6"/><circle cx="10" cy="6" r="6"/>
+      <circle cx="-3" cy="14" r="6"/><circle cx="8" cy="16" r="6"/>
+    </g>
+    <g fill="#9560a8" opacity="0.9"><circle cx="-2" cy="2" r="4"/><circle cx="-7" cy="10" r="4"/><circle cx="8" cy="10" r="4"/></g>
+    <g fill="#c98ac8"><circle cx="-2" cy="4" r="2"/></g>
+  </g>
+</svg>
 
 <script>
 const PREFIX = [
@@ -1217,9 +1335,9 @@ const BRANCHES = {
   b: {
     key: "b",
     name: "Диктатура Эстетики",
-    icon: "🎨",
-    desc: "Через Гоголевский бульвар. Арт-пространство, дальше — выбор по бару.",
-    meta: "развилка · 2 варианта",
+    icon: "🍸",
+    desc: "Через Гоголевский бульвар. Авторский бар, дальше — выбор финального бара.",
+    meta: "бар · развилка",
     points: [
       { n: 5, lat: 55.7475, lng: 37.6028,
         name: "Гоголевский бульвар",
@@ -1685,22 +1803,53 @@ btnAccept.addEventListener('click', () => {
   localStorage.setItem('invite-accepted', '1');
   const ilya = document.querySelector('.dino-wrap.ilya');
   const daria = document.querySelector('.dino-wrap.daria');
-  // Стадия 1: оба идут к левому краю — становятся возле экрана
   ilya?.classList.add('shoving');
   daria?.classList.add('shoving');
-  // Стадия 2: толкают экран — экран уезжает вправо
   setTimeout(() => {
     ilya?.classList.add('pushing');
     daria?.classList.add('pushing');
     inviteScreen.classList.add('pushed');
   }, 650);
-  // Стадия 3: экран спрятан, динозавры возвращаются в своё движение
   setTimeout(() => {
     inviteScreen.style.display = 'none';
     ilya?.classList.remove('shoving', 'pushing');
     daria?.classList.remove('shoving', 'pushing');
+    // После принятия запускаем таймер «сидячей» сцены
+    scheduleSitting(56000);  // 2 цикла по 28с
   }, 1700);
 });
+
+// Сидячая сцена: после 2 циклов — садятся под сирень с бокалами
+const sittingLilac = document.createElement('div');
+function scheduleSitting(delayMs) {
+  setTimeout(() => {
+    const ilya = document.querySelector('.dino-wrap.ilya');
+    const daria = document.querySelector('.dino-wrap.daria');
+    if (!ilya || !daria) return;
+    document.querySelector('.sitting-lilac')?.classList.add('visible');
+    ilya.classList.add('sitting');
+    daria.classList.add('sitting');
+    // Через 3 секунды Илья дарит сирень
+    setTimeout(() => {
+      ilya.classList.add('gave-lilac');
+      daria.classList.add('received-lilac');
+    }, 3000);
+    // Каждые 30 секунд — глоток
+    setInterval(() => {
+      ilya.classList.add('drinking');
+      daria.classList.add('drinking');
+      setTimeout(() => {
+        ilya.classList.remove('drinking');
+        daria.classList.remove('drinking');
+      }, 1900);
+    }, 30000);
+  }, delayMs);
+}
+
+// Если приглашение уже принято ранее — стартуем таймер от загрузки
+if (localStorage.getItem('invite-accepted') === '1') {
+  scheduleSitting(62000);  // 6с задержка анимации + 2 × 28с цикла
+}
 
 const ESCAPE_PHRASES = [
   'кнопку поймать не получится',
