@@ -2220,6 +2220,10 @@ const btnAccept = document.querySelector('.btn-accept');
 const btnDecline = document.querySelector('.btn-decline');
 const escapeHint = document.getElementById('escape-hint');
 
+// URL-параметр ?invite сбрасывает принятие — для просмотра стартового экрана заново
+if (location.search.includes('invite')) {
+  localStorage.removeItem('invite-accepted');
+}
 if (localStorage.getItem('invite-accepted') === '1') {
   inviteScreen.style.display = 'none';
 }
