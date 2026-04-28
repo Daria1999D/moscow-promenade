@@ -496,10 +496,48 @@
     animation: daria-cycle 28s ease-in-out infinite;
     animation-delay: 6s;
   }
-  .dino-wrap.ilya svg { transform: scaleX(-1); }
-  .dino-wrap.daria svg { transform: scaleX(-1); }
+  .dino-wrap.ilya svg {
+    transform: scaleX(-1);
+    animation: ilya-facing 28s ease-in-out infinite 6s;
+  }
+  .dino-wrap.daria svg {
+    transform: scaleX(-1);
+    animation: daria-facing 28s ease-in-out infinite 6s;
+  }
   .dino-wrap.ilya { transform-origin: 50% 100%; }
   .dino-wrap.daria { transform-origin: 50% 100%; }
+  /* Лицо к цели: разворот в моменты смены направления */
+  @keyframes ilya-facing {
+    0%, 54% { transform: scaleX(-1); }
+    55% { transform: scaleX(-0.3); }
+    56% { transform: scaleX(0.3); }
+    57%, 100% { transform: scaleX(1); }
+  }
+  @keyframes daria-facing {
+    0%, 71% { transform: scaleX(-1); }
+    73% { transform: scaleX(-0.3); }
+    74% { transform: scaleX(0.3); }
+    75%, 100% { transform: scaleX(1); }
+  }
+  /* Переключение между обычными и обнимающими лапками */
+  .dino-wrap.daria .arms-normal {
+    animation: arms-normal 28s ease-in-out infinite;
+    animation-delay: 6s;
+  }
+  .dino-wrap.daria .arms-hugging {
+    animation: arms-hug 28s ease-in-out infinite;
+    animation-delay: 6s;
+  }
+  @keyframes arms-normal {
+    0%, 39% { opacity: 1; }
+    42%, 54% { opacity: 0; }
+    57%, 100% { opacity: 1; }
+  }
+  @keyframes arms-hug {
+    0%, 39% { opacity: 0; }
+    42%, 54% { opacity: 1; }
+    57%, 100% { opacity: 0; }
+  }
   @keyframes ilya-cycle {
     /* IDLE */
     0%, 4% { transform: translateX(0); }
@@ -875,18 +913,33 @@
       <path d="M 28 38 Q 26 32 36 30 L 56 30 Q 64 34 64 42 L 64 64 Q 62 72 50 74 Q 36 74 30 68 Q 28 60 28 38 Z" fill="#5ba8c8"/>
       <!-- Брюхо -->
       <path d="M 32 56 Q 36 70 46 71 Q 56 70 60 58 Q 56 52 38 53 Z" fill="#8ed0e0"/>
-      <!-- Задняя лапка (за телом, выставлена вперёд) -->
-      <g fill="#3a7d96">
-        <path d="M 58 44 L 66 42 Q 70 45 67 49 L 60 48 Z"/>
-        <circle cx="68" cy="49" r="2.2"/>
-        <path d="M 69 47 L 71 46 M 69 50 L 71 51" stroke="#1a1a1a" stroke-width="0.7" stroke-linecap="round" fill="none"/>
+      <!-- Обычные лапки (вытянуты вперёд) -->
+      <g class="arms-normal">
+        <g fill="#3a7d96">
+          <path d="M 58 44 L 66 42 Q 70 45 67 49 L 60 48 Z"/>
+          <circle cx="68" cy="49" r="2.2"/>
+          <path d="M 69 47 L 71 46 M 69 50 L 71 51" stroke="#1a1a1a" stroke-width="0.7" stroke-linecap="round" fill="none"/>
+        </g>
+        <g fill="#5ba8c8">
+          <path d="M 58 38 L 68 36 Q 74 40 70 45 L 60 44 Z"/>
+          <circle cx="72" cy="44" r="2.6"/>
+          <path d="M 74 41 L 77 40 M 74 44 L 77 44 M 74 47 L 77 47" stroke="#1a1a1a" stroke-width="0.9" stroke-linecap="round" fill="none"/>
+        </g>
       </g>
-      <!-- Передняя лапка (выставлена вперёд) -->
-      <g fill="#5ba8c8">
-        <path d="M 58 38 L 68 36 Q 74 40 70 45 L 60 44 Z"/>
-        <circle cx="72" cy="44" r="2.6"/>
-        <!-- 3 коготка -->
-        <path d="M 74 41 L 77 40 M 74 44 L 77 44 M 74 47 L 77 47" stroke="#1a1a1a" stroke-width="0.9" stroke-linecap="round" fill="none"/>
+      <!-- Обнимающие лапки (вперёд и вниз, обхватывают Илью) -->
+      <g class="arms-hugging" opacity="0">
+        <!-- Задняя обнимающая лапка -->
+        <g fill="#3a7d96">
+          <path d="M 58 44 Q 70 44 78 50 Q 82 58 78 62 Q 73 58 67 52 Q 62 48 58 47 Z"/>
+          <circle cx="80" cy="62" r="2.4"/>
+          <path d="M 82 60 L 84 60 M 82 62 L 84 63 M 82 64 L 84 65" stroke="#1a1a1a" stroke-width="0.7" stroke-linecap="round" fill="none"/>
+        </g>
+        <!-- Передняя обнимающая лапка -->
+        <g fill="#5ba8c8">
+          <path d="M 58 38 Q 72 36 82 44 Q 86 54 82 58 Q 76 52 70 46 Q 62 41 58 41 Z"/>
+          <circle cx="84" cy="58" r="2.8"/>
+          <path d="M 86 55 L 89 54 M 86 58 L 89 58 M 86 61 L 89 61" stroke="#1a1a1a" stroke-width="0.9" stroke-linecap="round" fill="none"/>
+        </g>
       </g>
       <!-- Шея (чёткая, отдельный элемент) -->
       <rect x="40" y="22" width="16" height="14" rx="2" fill="#5ba8c8"/>
