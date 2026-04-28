@@ -1040,6 +1040,51 @@
     .lc-2 { width: 200px; }
     .petal { opacity: 0.5; }
   }
+
+  /* Геокод-панель (только при ?geocode) */
+  #geo-fab {
+    position: fixed; bottom: 18px; right: 18px;
+    width: 48px; height: 48px; border-radius: 50%;
+    background: var(--ink); color: var(--bg);
+    border: none; font-size: 22px; cursor: pointer;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.28);
+    z-index: 200;
+  }
+  #geo-panel {
+    position: fixed; bottom: 76px; right: 18px;
+    width: min(340px, calc(100vw - 36px));
+    background: var(--bg); color: var(--ink);
+    border: 2px solid var(--ink); border-radius: 14px;
+    padding: 12px; z-index: 200;
+    font-family: 'Mono', monospace; font-size: 13px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.22);
+    display: none;
+  }
+  #geo-panel.show { display: block; }
+  #geo-panel h3 { margin: 0 0 8px; font-size: 14px; font-family: 'Bluescreens', sans-serif; }
+  #geo-panel textarea {
+    width: 100%; min-height: 80px; box-sizing: border-box;
+    border: 1px solid var(--ink); border-radius: 6px;
+    padding: 6px; font-family: inherit; font-size: 12px; resize: vertical;
+    background: #fff;
+  }
+  #geo-panel button.go {
+    margin-top: 8px; padding: 6px 14px; cursor: pointer;
+    background: var(--ink); color: var(--bg); border: none; border-radius: 6px;
+    font-family: inherit; font-size: 13px;
+  }
+  #geo-panel button.go:disabled { opacity: 0.5; cursor: wait; }
+  #geo-out {
+    margin-top: 10px; max-height: 240px; overflow-y: auto;
+    background: #fff; padding: 8px; border: 1px solid #ddd; border-radius: 6px;
+    font-size: 11px; white-space: pre-wrap; word-break: break-all;
+  }
+  #geo-out:empty { display: none; }
+  #geo-panel .copy {
+    margin-left: 6px; padding: 4px 10px; background: transparent;
+    border: 1px solid var(--ink); border-radius: 6px; cursor: pointer;
+    font-family: inherit; font-size: 11px;
+  }
 </style>
 </head>
 <body>
@@ -2422,6 +2467,95 @@ btnDecline.addEventListener('click', e => {
   e.preventDefault();
   escapeDecline();
 });
+
+// === Yandex Geocoder dev-tool (?geocode) ===
+// Ключ привязан к домену в кабинете Яндекс API; квота 1000 запросов/день.
+// Открой страницу с ?geocode → панель внизу справа → вставь адреса (по строке) → "Геокодить".
+if (location.search.includes('geocode')) {
+  const YA_KEY = '214096a1-f1f7-4545-a32a-e6284cc4103e';
+  const fab = document.createElement('button');
+  fab.id = 'geo-fab';
+  fab.textContent = '🛰️';
+  fab.title = 'Геокодер';
+  document.body.appendChild(fab);
+
+  const panel = document.createElement('div');
+  panel.id = 'geo-panel';
+  panel.innerHTML = `
+    <h3>Геокодер · Яндекс</h3>
+    <textarea placeholder="Адрес на каждой строке&#10;напр. Москва, Пречистенка 14"></textarea>
+    <div>
+      <button class="go">Геокодить</button>
+      <button class="copy">📋 копировать</button>
+    </div>
+    <div id="geo-out"></div>`;
+  document.body.appendChild(panel);
+
+  const ta = panel.querySelector('textarea');
+  const go = panel.querySelector('.go');
+  const copy = panel.querySelector('.copy');
+  const out = panel.querySelector('#geo-out');
+
+  fab.addEventListener('click', () => panel.classList.toggle('show'));
+
+  let ymapsReady = null;
+  function loadYmaps() {
+    if (ymapsReady) return ymapsReady;
+    ymapsReady = new Promise((resolve, reject) => {
+      const s = document.createElement('script');
+      s.src = `https://api-maps.yandex.ru/2.1/?apikey=${YA_KEY}&lang=ru_RU`;
+      s.onload = () => window.ymaps.ready(() => resolve(window.ymaps));
+      s.onerror = reject;
+      document.head.appendChild(s);
+    });
+    return ymapsReady;
+  }
+
+  go.addEventListener('click', async () => {
+    const addrs = ta.value.split('\n').map(x => x.trim()).filter(Boolean);
+    if (!addrs.length) return;
+    go.disabled = true;
+    out.textContent = 'Загружаю Яндекс.Карты…';
+    try {
+      const ymaps = await loadYmaps();
+      const results = [];
+      for (const addr of addrs) {
+        try {
+          const res = await ymaps.geocode(addr, { results: 1 });
+          const obj = res.geoObjects.get(0);
+          if (obj) {
+            const [lat, lng] = obj.geometry.getCoordinates();
+            const found = obj.getAddressLine();
+            results.push({ addr, lat: +lat.toFixed(4), lng: +lng.toFixed(4), found });
+          } else {
+            results.push({ addr, error: 'не найден' });
+          }
+        } catch (err) {
+          results.push({ addr, error: err.message });
+        }
+      }
+      out.textContent = results.map(r =>
+        r.error
+          ? `❌ ${r.addr} — ${r.error}`
+          : `✅ ${r.addr}\n   { lat: ${r.lat}, lng: ${r.lng} }\n   ${r.found}`
+      ).join('\n\n');
+      out.dataset.json = JSON.stringify(results.filter(r => !r.error).map(r => ({ lat: r.lat, lng: r.lng })), null, 2);
+    } catch (err) {
+      out.textContent = `Ошибка загрузки API: ${err.message || err}`;
+    } finally {
+      go.disabled = false;
+    }
+  });
+
+  copy.addEventListener('click', () => {
+    const json = out.dataset.json || out.textContent;
+    if (!json) return;
+    navigator.clipboard.writeText(json).then(() => {
+      copy.textContent = '✓ скопировано';
+      setTimeout(() => copy.textContent = '📋 копировать', 1500);
+    });
+  });
+}
 </script>
 </body>
 </html>
