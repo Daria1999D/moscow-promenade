@@ -1294,6 +1294,16 @@ btnAccept.addEventListener('click', () => {
   setTimeout(() => { inviteScreen.style.display = 'none'; }, 600);
 });
 
+const ESCAPE_PHRASES = [
+  'кнопку поймать не получится',
+  'ну ладно, ещё попытка',
+  'она тренировалась убегать',
+  'может всё-таки примешь?',
+  'куда же ты её гонишь',
+  'упрямая? я упрямее',
+  'сирень опадает, время идёт',
+  'только «принять» работает'
+];
 let escapeCount = 0;
 function escapeDecline(awayFromX, awayFromY) {
   const w = window.innerWidth, h = window.innerHeight;
@@ -1319,8 +1329,14 @@ function escapeDecline(awayFromX, awayFromY) {
   btnDecline.style.bottom = 'auto';
   escapeCount++;
   if (escapeCount === 1) escapeHint.classList.add('visible');
-  if (escapeCount >= 5) escapeHint.textContent = 'может всё-таки примешь?';
-  if (escapeCount >= 10) escapeHint.textContent = 'упорно. но я тоже упорна';
+  const phrase = ESCAPE_PHRASES[(escapeCount - 1) % ESCAPE_PHRASES.length];
+  if (escapeHint.textContent !== phrase) {
+    escapeHint.style.opacity = '0';
+    setTimeout(() => {
+      escapeHint.textContent = phrase;
+      escapeHint.style.opacity = '1';
+    }, 180);
+  }
 }
 
 document.addEventListener('mousemove', e => {
