@@ -498,48 +498,63 @@
   }
   .dino-wrap.ilya svg { transform: scaleX(-1); }
   .dino-wrap.daria svg { transform: scaleX(-1); }
+  .dino-wrap.ilya { transform-origin: 50% 100%; }
+  .dino-wrap.daria { transform-origin: 50% 100%; }
   @keyframes ilya-cycle {
     0%, 5% { transform: translateX(0); }
     /* Walk to face-off — close to center */
-    20%, 26% { transform: translateX(calc(50vw - 105px)); }
+    18%, 24% { transform: translateX(calc(50vw - 115px)); }
     /* Fight: 4 face-to-face bumps */
-    28% { transform: translateX(calc(50vw - 105px)) translateY(-7px); }
-    30% { transform: translateX(calc(50vw - 100px)) translateY(0); }
-    32% { transform: translateX(calc(50vw - 105px)) translateY(-7px); }
-    34% { transform: translateX(calc(50vw - 100px)) translateY(0); }
-    36% { transform: translateX(calc(50vw - 105px)) translateY(-7px); }
-    38% { transform: translateX(calc(50vw - 100px)) translateY(0); }
-    40% { transform: translateX(calc(50vw - 105px)) translateY(-7px); }
-    42% { transform: translateX(calc(50vw - 100px)) translateY(0); }
-    /* Stand-off pause — Daria runs away */
-    50% { transform: translateX(calc(50vw - 130px)); }
-    /* Chase: Ilya lurches further right after Daria */
-    60% { transform: translateX(calc(75vw - 100px)); }
-    66% { transform: translateX(calc(75vw - 100px)) translateY(-5px); }
-    68% { transform: translateX(calc(75vw - 100px)) translateY(0); }
+    26% { transform: translateX(calc(50vw - 115px)) translateY(-7px); }
+    28% { transform: translateX(calc(50vw - 110px)) translateY(0); }
+    30% { transform: translateX(calc(50vw - 115px)) translateY(-7px); }
+    32% { transform: translateX(calc(50vw - 110px)) translateY(0); }
+    34% { transform: translateX(calc(50vw - 115px)) translateY(-7px); }
+    36% { transform: translateX(calc(50vw - 110px)) translateY(0); }
+    38% { transform: translateX(calc(50vw - 115px)) translateY(-7px); }
+    40% { transform: translateX(calc(50vw - 110px)) translateY(0); }
+    /* Daria leaps over and lands on Ilya — Ilya gets squished */
+    44% { transform: translateX(calc(50vw - 115px)) translateY(0) scaleY(1); }
+    50% { transform: translateX(calc(50vw - 115px)) translateY(8px) scaleY(0.78); }
+    52% { transform: translateX(calc(50vw - 115px)) translateY(12px) scaleY(0.7); }
+    54% { transform: translateX(calc(50vw - 115px)) translateY(8px) scaleY(0.78); }
+    56% { transform: translateX(calc(50vw - 115px)) translateY(0) scaleY(1); }
+    /* Daria zooms left, Ilya surprised */
+    60% { transform: translateX(calc(50vw - 115px)) translateY(-8px) scaleY(1); }
+    62% { transform: translateX(calc(50vw - 115px)) translateY(0) scaleY(1); }
+    /* Ilya lurches left after Daria */
+    68% { transform: translateX(calc(20vw - 60px)) scaleY(1); }
+    72% { transform: translateX(calc(20vw - 60px)) scaleY(1); }
     /* Walk back home */
-    85%, 100% { transform: translateX(0); }
+    85%, 100% { transform: translateX(0) scaleY(1); }
   }
   @keyframes daria-cycle {
     0%, 5% { transform: translateX(0); }
     /* Walk to face-off, close to Ilya */
-    20%, 26% { transform: translateX(calc(-50vw + 95px)); }
+    18%, 24% { transform: translateX(calc(-50vw + 90px)); }
     /* Fight: 4 face-to-face bumps */
-    28% { transform: translateX(calc(-50vw + 95px)) translateY(-9px); }
-    30% { transform: translateX(calc(-50vw + 90px)) translateY(0); }
-    32% { transform: translateX(calc(-50vw + 95px)) translateY(-9px); }
-    34% { transform: translateX(calc(-50vw + 90px)) translateY(0); }
-    36% { transform: translateX(calc(-50vw + 95px)) translateY(-9px); }
-    38% { transform: translateX(calc(-50vw + 90px)) translateY(0); }
-    40% { transform: translateX(calc(-50vw + 95px)) translateY(-9px); }
-    42% { transform: translateX(calc(-50vw + 90px)) translateY(0); }
-    /* Daria zooms LEFT past Ilya */
-    50% { transform: translateX(calc(-90vw + 100px)); }
-    55% { transform: translateX(calc(-90vw + 100px)); }
-    /* Daria runs back to her corner */
-    72% { transform: translateX(0); }
+    26% { transform: translateX(calc(-50vw + 90px)) translateY(-9px); }
+    28% { transform: translateX(calc(-50vw + 85px)) translateY(0); }
+    30% { transform: translateX(calc(-50vw + 90px)) translateY(-9px); }
+    32% { transform: translateX(calc(-50vw + 85px)) translateY(0); }
+    34% { transform: translateX(calc(-50vw + 90px)) translateY(-9px); }
+    36% { transform: translateX(calc(-50vw + 85px)) translateY(0); }
+    38% { transform: translateX(calc(-50vw + 90px)) translateY(-9px); }
+    40% { transform: translateX(calc(-50vw + 85px)) translateY(0); }
+    /* JUMP on Ilya — leaps up, over, lands on him */
+    43% { transform: translateX(calc(-50vw + 70px)) translateY(-25px); }
+    46% { transform: translateX(calc(-50vw + 50px)) translateY(-40px); }   /* peak above */
+    49% { transform: translateX(calc(-50vw + 25px)) translateY(-25px); }
+    52% { transform: translateX(calc(-50vw + 5px)) translateY(-12px); }    /* on Ilya */
+    54% { transform: translateX(calc(-50vw + 5px)) translateY(-18px); }    /* bounce up */
+    56% { transform: translateX(calc(-50vw + 5px)) translateY(-12px); }    /* settle */
+    /* Daria zooms LEFT, all the way */
+    60% { transform: translateX(calc(-90vw + 80px)) translateY(0); }
+    66% { transform: translateX(calc(-90vw + 80px)); }
+    /* Daria runs back home */
+    78% { transform: translateX(0); }
     /* Idle */
-    85%, 100% { transform: translateX(0); }
+    90%, 100% { transform: translateX(0); }
   }
   @media (max-width: 600px) {
     .dino-wrap.ilya svg { width: 88px; height: auto; }
@@ -841,48 +856,54 @@
     </svg>
   </div>
   <div class="dino-wrap daria">
-    <svg viewBox="0 0 95 115" width="74" height="90" xmlns="http://www.w3.org/2000/svg">
-      <!-- Дарья — ти-рекс-фигурка -->
-      <!-- Хвост сзади (тёмный слой) -->
-      <path d="M 12 60 Q -2 70 8 86 Q 20 92 30 80 Q 36 72 30 62 Z" fill="#3a7d96"/>
-      <!-- Хвост передний слой -->
-      <path d="M 14 58 Q 4 68 12 82 Q 22 87 30 78 Q 35 70 30 60 Z" fill="#5ba8c8"/>
-      <!-- Задняя нога -->
-      <path d="M 32 70 Q 28 86 32 100 L 50 100 Q 52 86 50 70 Z" fill="#3a7d96"/>
-      <!-- Передняя нога -->
-      <path d="M 38 68 Q 32 84 36 100 L 54 100 Q 56 84 54 68 Z" fill="#5ba8c8"/>
-      <!-- Стопы -->
-      <ellipse cx="42" cy="103" rx="11" ry="3" fill="#1a1a1a" opacity="0.4"/>
-      <ellipse cx="46" cy="105" rx="9" ry="2.5" fill="#1a1a1a" opacity="0.3"/>
-      <!-- Тело -->
-      <ellipse cx="42" cy="58" rx="24" ry="20" fill="#5ba8c8"/>
-      <!-- Брюхо светлое -->
-      <ellipse cx="42" cy="65" rx="18" ry="11" fill="#8ed0e0"/>
+    <svg viewBox="0 0 95 105" width="76" height="84" xmlns="http://www.w3.org/2000/svg">
+      <!-- Дарья — детский ти-рекс, стоит вертикально, угловатый -->
+      <!-- Хвост (вытянутый назад горизонтально) -->
+      <path d="M 28 60 L 5 58 Q -2 62 0 68 Q 5 73 25 70 L 35 65 Z" fill="#3a7d96"/>
+      <path d="M 28 58 L 8 56 Q 4 60 6 65 Q 12 68 26 66 L 32 62 Z" fill="#5ba8c8"/>
+      <!-- Тело: прямоугольное (барабанной формы) -->
+      <path d="M 28 38 Q 26 32 36 30 L 56 30 Q 64 34 64 42 L 64 64 Q 62 72 50 74 Q 36 74 30 68 Q 28 60 28 38 Z" fill="#5ba8c8"/>
+      <!-- Брюхо -->
+      <path d="M 32 56 Q 36 70 46 71 Q 56 70 60 58 Q 56 52 38 53 Z" fill="#8ed0e0"/>
       <!-- Маленькая ручка -->
-      <ellipse cx="52" cy="58" rx="5" ry="3" fill="#5ba8c8"/>
-      <circle cx="56" cy="60" r="2.5" fill="#3a7d96"/>
-      <!-- Голова большая -->
-      <ellipse cx="52" cy="28" rx="22" ry="18" fill="#5ba8c8"/>
-      <!-- Морда вытянутая -->
-      <path d="M 60 30 Q 90 28 90 40 Q 84 47 70 42 Q 60 38 60 30 Z" fill="#5ba8c8"/>
+      <ellipse cx="56" cy="46" rx="3" ry="6" fill="#3a7d96"/>
+      <ellipse cx="56" cy="54" rx="2.5" ry="3" fill="#5ba8c8"/>
+      <circle cx="56" cy="56" r="1" fill="#3a7d96"/>
+      <!-- Шея (чёткая, отдельный элемент) -->
+      <rect x="40" y="22" width="16" height="14" rx="2" fill="#5ba8c8"/>
+      <!-- Голова: угловатая, с явной челюстью -->
+      <!-- Верх головы -->
+      <path d="M 32 3 L 60 3 Q 78 5 84 12 L 84 22 Q 80 24 70 24 L 32 24 Q 26 22 26 14 Q 26 6 32 3 Z" fill="#5ba8c8"/>
+      <!-- Нижняя челюсть с зубами -->
+      <path d="M 30 24 L 84 24 L 84 32 Q 78 34 64 33 L 30 31 Q 26 28 28 25 Z" fill="#5ba8c8"/>
       <!-- Линия рта -->
-      <path d="M 60 36 Q 70 42 88 36" stroke="#1a1a1a" stroke-width="1.5" fill="none" stroke-linecap="round"/>
-      <!-- Зубы -->
-      <path d="M 66 36 L 67 39 L 68 36 Z" fill="#ffffff"/>
-      <path d="M 73 37 L 74 40 L 75 37 Z" fill="#ffffff"/>
-      <path d="M 81 37 L 82 40 L 83 37 Z" fill="#ffffff"/>
-      <!-- Бровь -->
-      <path d="M 50 18 Q 57 15 64 19" stroke="#3a7d96" stroke-width="2" fill="none" stroke-linecap="round"/>
+      <path d="M 30 27 L 84 26" stroke="#1a1a1a" stroke-width="1.4" fill="none" stroke-linecap="round"/>
+      <!-- Зубы (5 штук) -->
+      <path d="M 38 27 L 39 31 L 41 27 Z" fill="#ffffff"/>
+      <path d="M 48 27 L 49 31 L 51 27 Z" fill="#ffffff"/>
+      <path d="M 58 27 L 59 31 L 61 27 Z" fill="#ffffff"/>
+      <path d="M 68 27 L 69 30 L 71 27 Z" fill="#ffffff"/>
+      <path d="M 78 26 L 79 30 L 81 26 Z" fill="#ffffff"/>
       <!-- Глаз -->
-      <circle cx="56" cy="24" r="3.6" fill="#1a1a1a"/>
-      <circle cx="57" cy="22" r="1.5" fill="#ffffff"/>
-      <circle cx="55" cy="26" r="0.7" fill="#ffffff"/>
+      <circle cx="55" cy="13" r="3.2" fill="#1a1a1a"/>
+      <circle cx="56" cy="12" r="1.2" fill="#ffffff"/>
+      <circle cx="54" cy="15" r="0.5" fill="#ffffff"/>
+      <!-- Бровь -->
+      <path d="M 50 7 Q 56 4 62 8" stroke="#3a7d96" stroke-width="2" fill="none" stroke-linecap="round"/>
       <!-- Блик на голове -->
-      <ellipse cx="46" cy="18" rx="9" ry="6" fill="#8ed0e0" opacity="0.85"/>
-      <!-- Блик на плече -->
-      <ellipse cx="32" cy="50" rx="7" ry="5" fill="#8ed0e0" opacity="0.5"/>
+      <ellipse cx="40" cy="7" rx="8" ry="3" fill="#8ed0e0" opacity="0.75"/>
+      <!-- Задняя нога (видна сзади) -->
+      <path d="M 36 70 L 36 95 L 48 95 L 48 70 Z" fill="#3a7d96"/>
+      <ellipse cx="42" cy="80" rx="5" ry="3" fill="#3a7d96"/>
+      <!-- Передняя нога -->
+      <path d="M 30 70 Q 28 76 28 80 L 28 96 L 42 96 L 42 80 Q 42 75 40 70 Z" fill="#5ba8c8"/>
+      <!-- Колено блик -->
+      <ellipse cx="34" cy="83" rx="5" ry="2" fill="#8ed0e0" opacity="0.6"/>
+      <!-- Тени под стопами -->
+      <ellipse cx="35" cy="97" rx="9" ry="2" fill="#1a1a1a" opacity="0.4"/>
+      <ellipse cx="44" cy="97" rx="8" ry="2" fill="#1a1a1a" opacity="0.4"/>
       <!-- Щёчка -->
-      <circle cx="46" cy="34" r="3" fill="#ff8a80" opacity="0.45"/>
+      <circle cx="46" cy="22" r="2.8" fill="#ff8a80" opacity="0.4"/>
     </svg>
   </div>
 </div>
