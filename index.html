@@ -696,6 +696,152 @@
     90%, 100% { opacity: 1; }
   }
 
+  /* Кнопка "Дома" */
+  .btn-home {
+    position: fixed;
+    bottom: 24px; left: 50%; transform: translateX(-50%);
+    z-index: 9100;
+    padding: 14px 32px;
+    background: var(--ink); color: var(--bg);
+    border: 2px solid var(--ink);
+    font-family: 'Bluescreens', sans-serif;
+    font-size: 14px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.06em;
+    cursor: pointer;
+    transition: all 0.2s;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .btn-home:hover { background: var(--accent); border-color: var(--accent); }
+  .btn-home::before { content: '⌂ '; }
+  body.home-mode .btn-home { opacity: 0; pointer-events: none; transition: opacity .5s; }
+
+  /* Затемнение сцены */
+  .dim-overlay {
+    position: fixed; inset: 0;
+    background: rgba(8, 12, 30, 0);
+    pointer-events: none;
+    z-index: 9050;
+    transition: background 2s ease;
+  }
+  body.home-mode .dim-overlay { background: rgba(8, 12, 30, 0.55); }
+  body.lights-off .dim-overlay { background: rgba(4, 6, 14, 0.94); }
+
+  /* Сцена спальни */
+  #bedroom-scene {
+    position: fixed; bottom: 0; left: 0; right: 0;
+    height: 65vh;
+    pointer-events: none;
+    z-index: 9080;
+    opacity: 0;
+    transition: opacity 1.5s ease 0.5s;
+  }
+  body.home-mode #bedroom-scene { opacity: 1; }
+  .bedroom-svg { width: 100%; height: 100%; display: block; }
+
+  /* Гирлянда — тёплое жёлтое свечение */
+  .garland-light {
+    fill: #ffd76a;
+    filter: drop-shadow(0 0 5px #ffb84d) drop-shadow(0 0 12px rgba(255, 153, 51, 0.6));
+    transition: opacity 1.5s, filter 1.5s, fill 1.5s;
+  }
+  body.lights-off .garland-light {
+    opacity: 0.18;
+    filter: none;
+    fill: #4a4030;
+  }
+
+  /* Облако с фразой Ильи */
+  .speech-bubble {
+    position: fixed;
+    bottom: 50vh;
+    left: 50%;
+    transform: translateX(-50%) translateY(15px);
+    background: var(--bg);
+    color: var(--ink);
+    padding: 14px 22px;
+    font-family: 'Neoris', sans-serif;
+    font-size: 14px;
+    border: 2px solid var(--ink);
+    border-radius: 16px;
+    pointer-events: none;
+    z-index: 9300;
+    opacity: 0;
+    transition: opacity .4s ease, transform .4s ease;
+    white-space: nowrap;
+  }
+  .speech-bubble::after {
+    content: '';
+    position: absolute;
+    bottom: -12px;
+    left: 24px;
+    width: 0; height: 0;
+    border-left: 9px solid transparent;
+    border-right: 9px solid transparent;
+    border-top: 12px solid var(--ink);
+  }
+  .speech-bubble::before {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 26px;
+    width: 0; height: 0;
+    border-left: 7px solid transparent;
+    border-right: 7px solid transparent;
+    border-top: 9px solid var(--bg);
+    z-index: 1;
+  }
+  body.show-bubble .speech-bubble {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  /* Сонные Z */
+  .snore-z {
+    position: fixed;
+    font-family: 'Bluescreens', sans-serif;
+    font-weight: 700;
+    color: #c4bdb1;
+    pointer-events: none;
+    z-index: 9300;
+    opacity: 0;
+    will-change: transform, opacity;
+  }
+  body.snoring .snore-z { animation: snore 3s ease-out infinite; }
+  .snore-z.z1 { font-size: 18px; left: 38vw; bottom: 35vh; animation-delay: 0s; }
+  .snore-z.z2 { font-size: 26px; left: 50vw; bottom: 38vh; animation-delay: 1s; }
+  .snore-z.z3 { font-size: 32px; left: 60vw; bottom: 36vh; animation-delay: 2s; }
+  @keyframes snore {
+    0% { opacity: 0; transform: translateY(15px) scale(0.8); }
+    25% { opacity: 0.75; transform: translateY(0) scale(1); }
+    100% { opacity: 0; transform: translateY(-50px) scale(1.2); }
+  }
+
+  /* Дино идут домой */
+  .dino-wrap.going-home {
+    animation: none !important;
+    transition: left 2s ease-in-out, right 2s ease-in-out, bottom 2s ease-in-out, transform 2s ease-in-out !important;
+    z-index: 9200 !important;
+  }
+  .dino-wrap.going-home svg {
+    animation: none !important;
+    transform: scaleX(-1) !important;
+  }
+  .dino-wrap.ilya.going-home {
+    left: calc(50vw - 70px); right: auto;
+    bottom: 22vh;
+    transform: scale(0.85) !important;
+  }
+  .dino-wrap.daria.going-home {
+    left: calc(50vw + 10px); right: auto;
+    bottom: 24vh;
+    transform: scale(0.85) !important;
+  }
+  /* На мобиле сдвинуть ближе друг к другу */
+  @media (max-width: 600px) {
+    .dino-wrap.ilya.going-home { left: calc(50vw - 50px); bottom: 20vh; transform: scale(0.7) !important; }
+    .dino-wrap.daria.going-home { left: calc(50vw); bottom: 22vh; transform: scale(0.7) !important; }
+  }
+
   /* «Сидячая» сцена: после 2 циклов — садятся под сиренью с бокалами вина */
   .dino-wrap.sitting {
     animation: none !important;
@@ -1216,6 +1362,100 @@
   </g>
 </svg>
 
+<!-- Кнопка "Дома" -->
+<button class="btn-home" id="btn-home">Дома</button>
+
+<!-- Затемнение -->
+<div class="dim-overlay" aria-hidden="true"></div>
+
+<!-- Сцена спальни -->
+<div id="bedroom-scene" aria-hidden="true">
+  <svg class="bedroom-svg" viewBox="0 0 1000 600" preserveAspectRatio="xMidYEnd meet" xmlns="http://www.w3.org/2000/svg">
+    <!-- Гирлянда (провод) -->
+    <path d="M 80 110 Q 500 50 920 110" stroke="#5a4a2a" stroke-width="2" fill="none"/>
+    <!-- Лампочки гирлянды -->
+    <g class="garland-lights">
+      <ellipse class="garland-light" cx="160" cy="100" rx="6" ry="9"/>
+      <ellipse class="garland-light" cx="240" cy="86" rx="6" ry="9"/>
+      <ellipse class="garland-light" cx="320" cy="74" rx="6" ry="9"/>
+      <ellipse class="garland-light" cx="400" cy="64" rx="6" ry="9"/>
+      <ellipse class="garland-light" cx="500" cy="58" rx="6" ry="9"/>
+      <ellipse class="garland-light" cx="600" cy="64" rx="6" ry="9"/>
+      <ellipse class="garland-light" cx="680" cy="74" rx="6" ry="9"/>
+      <ellipse class="garland-light" cx="760" cy="86" rx="6" ry="9"/>
+      <ellipse class="garland-light" cx="840" cy="100" rx="6" ry="9"/>
+    </g>
+
+    <!-- Кровать -->
+    <g class="bed-art">
+      <!-- Изголовье -->
+      <rect x="200" y="240" width="40" height="180" fill="#8b6f47" rx="4"/>
+      <rect x="200" y="240" width="40" height="20" fill="#6b4f2c" rx="2"/>
+      <!-- Матрас -->
+      <rect x="240" y="320" width="500" height="60" fill="#f4ebd5" rx="8"/>
+      <!-- Подушки -->
+      <ellipse cx="290" cy="310" rx="55" ry="20" fill="#fff8e8"/>
+      <ellipse cx="380" cy="305" rx="55" ry="20" fill="#fff8e8"/>
+      <!-- Каркас -->
+      <rect x="240" y="375" width="500" height="22" fill="#6b4f2c" rx="2"/>
+      <!-- Ножки -->
+      <rect x="245" y="397" width="10" height="40" fill="#6b4f2c"/>
+      <rect x="725" y="397" width="10" height="40" fill="#6b4f2c"/>
+      <!-- Одеяло (поверх ног дино) -->
+      <path d="M 440 330 L 740 330 L 740 385 L 440 385 Q 425 358 440 330 Z" fill="#7a3d7a"/>
+      <!-- Узор на одеяле -->
+      <g stroke="#5a2d5a" stroke-width="1.2" opacity="0.5" fill="none">
+        <path d="M 470 335 L 470 380"/>
+        <path d="M 510 335 L 510 380"/>
+        <path d="M 550 335 L 550 380"/>
+        <path d="M 590 335 L 590 380"/>
+        <path d="M 630 335 L 630 380"/>
+        <path d="M 670 335 L 670 380"/>
+        <path d="M 710 335 L 710 380"/>
+      </g>
+      <!-- Складка одеяла сверху -->
+      <ellipse cx="590" cy="332" rx="155" ry="6" fill="#5a2d5a" opacity="0.4"/>
+    </g>
+
+    <!-- Тумба + ваза с сиренью (справа) -->
+    <g class="vase-art" transform="translate(800 350)">
+      <!-- Тумба -->
+      <rect x="-15" y="50" width="100" height="80" fill="#a08267" rx="3"/>
+      <rect x="-15" y="48" width="100" height="6" fill="#8b6f47" rx="2"/>
+      <!-- Ваза -->
+      <path d="M 25 0 Q 22 30 30 50 L 60 50 Q 68 30 65 0 L 60 -10 Q 50 -15 45 -15 Q 40 -15 30 -10 Z" fill="#9bc8d5"/>
+      <ellipse cx="38" cy="10" rx="2" ry="15" fill="#fff" opacity="0.5"/>
+      <!-- Стебли -->
+      <path d="M 45 -15 L 40 -55" stroke="#637048" stroke-width="2" fill="none" stroke-linecap="round"/>
+      <path d="M 50 -15 L 55 -50" stroke="#637048" stroke-width="2" fill="none" stroke-linecap="round"/>
+      <path d="M 42 -15 L 35 -60" stroke="#637048" stroke-width="2" fill="none" stroke-linecap="round"/>
+      <!-- Сирень кисти -->
+      <g fill="#5a3070" opacity="0.85">
+        <circle cx="40" cy="-55" r="8"/><circle cx="32" cy="-50" r="7"/><circle cx="48" cy="-50" r="7"/>
+        <circle cx="36" cy="-42" r="8"/><circle cx="46" cy="-44" r="7"/>
+        <circle cx="55" cy="-50" r="8"/><circle cx="62" cy="-44" r="7"/><circle cx="50" cy="-38" r="7"/>
+        <circle cx="35" cy="-60" r="7"/><circle cx="42" cy="-62" r="7"/>
+      </g>
+      <g fill="#9560a8">
+        <circle cx="40" cy="-55" r="4"/><circle cx="48" cy="-50" r="4"/>
+        <circle cx="36" cy="-42" r="4"/><circle cx="55" cy="-50" r="4"/>
+        <circle cx="42" cy="-62" r="3"/>
+      </g>
+      <g fill="#c98ac8">
+        <circle cx="40" cy="-55" r="2"/><circle cx="55" cy="-50" r="2"/><circle cx="36" cy="-42" r="1.5"/>
+      </g>
+    </g>
+  </svg>
+</div>
+
+<!-- Облако с фразой Ильи -->
+<div class="speech-bubble" id="speech-bubble">Яндекс, выключи свет</div>
+
+<!-- Сонные Z -->
+<div class="snore-z z1" aria-hidden="true">z</div>
+<div class="snore-z z2" aria-hidden="true">z</div>
+<div class="snore-z z3" aria-hidden="true">Z</div>
+
 <script>
 const PREFIX = [
   { n: 1, lat: 55.7350, lng: 37.5856,
@@ -1301,7 +1541,7 @@ const BRANCHES = {
       { n: 5, lat: 55.7510, lng: 37.6098,
         name: "Бар «Кабинет психолога»",
         tag: "🍷 бар",
-        desc: "Староваганьковский, 19 с3. Концепт-бар с «терапевтической» эстетикой. По пути — Храм Христа Спасителя, Патриарший мост, ГМИИ, Дом Пашкова. <b>Что брать:</b> авторская настойка на травах (попроси «фирменную»), либо коктейль с тематическим названием — у них бывают «диагнозы». 30–40 мин." },
+        desc: "Староваганьковский, 19 с3. Концепт-бар с «терапевтической» эстетикой — у них коктейли названы как эмоции/диагнозы. По пути — Храм Христа Спасителя, Патриарший мост, ГМИИ, Дом Пашкова. <b>Что брать:</b> Илье — <b>«Радость»</b>, Дарье — <b>«Страх»</b>. 30–40 мин." },
       { n: 6, lat: 55.7556, lng: 37.6126,
         name: "Дворик Моховая, 9 с24",
         tag: "🌿 двор",
@@ -1325,7 +1565,7 @@ const BRANCHES = {
       { n: 11, lat: 55.7660, lng: 37.6098,
         name: "Бар «Легендар»",
         tag: "🍸 бар",
-        desc: "Малая Дмитровка, 4. Финальный бар у Пушкинской площади. От THE BIX через Сытинский переулок. <b>Что брать:</b> авторский коктейль или Manhattan / Whiskey Sour — закрытый аккорд вечера." },
+        desc: "Малая Дмитровка, 4. Финальный бар у Пушкинской площади. От THE BIX через Сытинский переулок. <b>Что брать:</b> Илье — <b>«Перун»</b>, Дарье — <b>«Пасечник»</b> (фирменные коктейли заведения). Закрытый аккорд вечера." },
       { n: 12, lat: 55.7657, lng: 37.6077,
         name: "Страстной бульвар, 12к1",
         tag: "🏁 финиш",
@@ -1395,7 +1635,7 @@ const BRANCHES = {
           { n: 9, lat: 55.7660, lng: 37.6098,
             name: "Бар «Легендар»",
             tag: "🍸 бар",
-            desc: "Малая Дмитровка, 4. Финальный бар у Пушкинской. От THE BIX через Сытинский переулок. <b>Что брать:</b> авторский коктейль или Manhattan / Whiskey Sour." },
+            desc: "Малая Дмитровка, 4. Финальный бар у Пушкинской. От THE BIX через Сытинский переулок. <b>Что брать:</b> Илье — <b>«Перун»</b>, Дарье — <b>«Пасечник»</b> (фирменные коктейли)." },
           { n: 10, lat: 55.7657, lng: 37.6100,
             name: "Страстной бульвар, 12к1",
             tag: "🏁 финиш",
@@ -1451,7 +1691,7 @@ const BRANCHES = {
           { n: 10, lat: 55.7660, lng: 37.6090,
             name: "Бар «Легендар»",
             tag: "🍸 бар",
-            desc: "Малая Дмитровка, 4. Последний бар у Пушкинской. От THE BIX через Сытинский переулок. <b>Что брать:</b> авторский коктейль или Manhattan / Whiskey Sour." },
+            desc: "Малая Дмитровка, 4. Последний бар у Пушкинской. От THE BIX через Сытинский переулок. <b>Что брать:</b> Илье — <b>«Перун»</b>, Дарье — <b>«Пасечник»</b> (фирменные коктейли)." },
           { n: 11, lat: 55.7657, lng: 37.6100,
             name: "Страстной бульвар, 12к1",
             tag: "🏁 финиш",
@@ -1850,6 +2090,37 @@ function scheduleSitting(delayMs) {
 if (localStorage.getItem('invite-accepted') === '1') {
   scheduleSitting(62000);  // 6с задержка анимации + 2 × 28с цикла
 }
+
+/* === Кнопка "Дома" — сцена сна === */
+const btnHome = document.getElementById('btn-home');
+btnHome?.addEventListener('click', () => {
+  if (document.body.classList.contains('home-mode')) return;
+  document.body.classList.add('home-mode');
+  const ilya = document.querySelector('.dino-wrap.ilya');
+  const daria = document.querySelector('.dino-wrap.daria');
+  // Снять предыдущие состояния (sitting, drinking)
+  ['sitting', 'drinking', 'gave-lilac', 'received-lilac'].forEach(cls => {
+    ilya?.classList.remove(cls); daria?.classList.remove(cls);
+  });
+  // 1. Дино идут к кровати
+  setTimeout(() => {
+    ilya?.classList.add('going-home');
+    daria?.classList.add('going-home');
+  }, 800);
+  // 2. Облако появляется (Илья просит выключить свет)
+  setTimeout(() => {
+    document.body.classList.add('show-bubble');
+  }, 4000);
+  // 3. Свет гаснет, облако исчезает
+  setTimeout(() => {
+    document.body.classList.add('lights-off');
+    document.body.classList.remove('show-bubble');
+  }, 6500);
+  // 4. Сопение начинается
+  setTimeout(() => {
+    document.body.classList.add('snoring');
+  }, 7800);
+});
 
 const ESCAPE_PHRASES = [
   'кнопку поймать не получится',
