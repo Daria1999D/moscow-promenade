@@ -498,27 +498,49 @@
     animation: daria-cycle 22s ease-in-out infinite;
     animation-delay: 6s;
   }
+  .dino-wrap.ilya svg { transform: scaleX(-1); }
   .dino-wrap.daria svg { transform: scaleX(-1); }
   @keyframes ilya-cycle {
-    0%, 6% { transform: translateX(0); }
-    32%, 38% { transform: translateX(calc(50vw - 120px)); }
-    41% { transform: translateX(calc(50vw - 120px)) translateY(-7px); }
-    44% { transform: translateX(calc(50vw - 110px)) translateY(0); }
-    47% { transform: translateX(calc(50vw - 120px)) translateY(-7px); }
-    50% { transform: translateX(calc(50vw - 110px)) translateY(0); }
-    53% { transform: translateX(calc(50vw - 120px)) translateY(-7px); }
-    56% { transform: translateX(calc(50vw - 120px)) translateY(0); }
+    0%, 5% { transform: translateX(0); }
+    /* Walk to face-off — close to center */
+    20%, 26% { transform: translateX(calc(50vw - 105px)); }
+    /* Fight: 4 face-to-face bumps */
+    28% { transform: translateX(calc(50vw - 105px)) translateY(-7px); }
+    30% { transform: translateX(calc(50vw - 100px)) translateY(0); }
+    32% { transform: translateX(calc(50vw - 105px)) translateY(-7px); }
+    34% { transform: translateX(calc(50vw - 100px)) translateY(0); }
+    36% { transform: translateX(calc(50vw - 105px)) translateY(-7px); }
+    38% { transform: translateX(calc(50vw - 100px)) translateY(0); }
+    40% { transform: translateX(calc(50vw - 105px)) translateY(-7px); }
+    42% { transform: translateX(calc(50vw - 100px)) translateY(0); }
+    /* Stand-off pause — Daria runs away */
+    50% { transform: translateX(calc(50vw - 130px)); }
+    /* Chase: Ilya lurches further right after Daria */
+    60% { transform: translateX(calc(75vw - 100px)); }
+    66% { transform: translateX(calc(75vw - 100px)) translateY(-5px); }
+    68% { transform: translateX(calc(75vw - 100px)) translateY(0); }
+    /* Walk back home */
     85%, 100% { transform: translateX(0); }
   }
   @keyframes daria-cycle {
-    0%, 6% { transform: translateX(0); }
-    32%, 38% { transform: translateX(calc(-50vw + 120px)); }
-    41% { transform: translateX(calc(-50vw + 120px)) translateY(-9px); }
-    44% { transform: translateX(calc(-50vw + 110px)) translateY(0); }
-    47% { transform: translateX(calc(-50vw + 120px)) translateY(-9px); }
-    50% { transform: translateX(calc(-50vw + 110px)) translateY(0); }
-    53% { transform: translateX(calc(-50vw + 120px)) translateY(-9px); }
-    56% { transform: translateX(calc(-50vw + 120px)) translateY(0); }
+    0%, 5% { transform: translateX(0); }
+    /* Walk to face-off, close to Ilya */
+    20%, 26% { transform: translateX(calc(-50vw + 95px)); }
+    /* Fight: 4 face-to-face bumps */
+    28% { transform: translateX(calc(-50vw + 95px)) translateY(-9px); }
+    30% { transform: translateX(calc(-50vw + 90px)) translateY(0); }
+    32% { transform: translateX(calc(-50vw + 95px)) translateY(-9px); }
+    34% { transform: translateX(calc(-50vw + 90px)) translateY(0); }
+    36% { transform: translateX(calc(-50vw + 95px)) translateY(-9px); }
+    38% { transform: translateX(calc(-50vw + 90px)) translateY(0); }
+    40% { transform: translateX(calc(-50vw + 95px)) translateY(-9px); }
+    42% { transform: translateX(calc(-50vw + 90px)) translateY(0); }
+    /* Daria zooms LEFT past Ilya */
+    50% { transform: translateX(calc(-90vw + 100px)); }
+    55% { transform: translateX(calc(-90vw + 100px)); }
+    /* Daria runs back to her corner */
+    72% { transform: translateX(0); }
+    /* Idle */
     85%, 100% { transform: translateX(0); }
   }
   @media (max-width: 600px) {
@@ -778,77 +800,116 @@
 
 <div class="dinos" aria-hidden="true">
   <div class="dino-wrap ilya">
-    <svg viewBox="0 0 22 10" width="88" height="40" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges">
-      <g fill="#ffc4a0">
-        <rect x="6" y="0" width="1" height="1"/>
-        <rect x="8" y="0" width="1" height="1"/>
+    <svg viewBox="0 0 16 12" width="96" height="72" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges">
+      <!-- Илья: LEGO-style анкилозавр (чанки, блоки, чистые цвета) -->
+      <!-- Шипы-пластины (персиковые) -->
+      <g fill="#ff9b6e">
+        <rect x="4" y="0" width="2" height="2"/>
+        <rect x="7" y="0" width="2" height="2"/>
+        <rect x="10" y="0" width="2" height="2"/>
+      </g>
+      <!-- Хвостовая булава -->
+      <g fill="#ff9b6e">
+        <rect x="13" y="4" width="3" height="4"/>
+      </g>
+      <!-- Тело основное -->
+      <g fill="#4ca84c">
+        <rect x="3" y="2" width="11" height="1"/>
+        <rect x="2" y="3" width="13" height="1"/>
+        <rect x="1" y="4" width="14" height="4"/>
+        <rect x="2" y="8" width="13" height="1"/>
+        <!-- 4 ноги-кубика -->
+        <rect x="2" y="9" width="2" height="3"/>
+        <rect x="6" y="9" width="2" height="3"/>
+        <rect x="9" y="9" width="2" height="3"/>
+        <rect x="12" y="9" width="2" height="3"/>
+      </g>
+      <!-- Светлая верхняя часть тела (LEGO-блик) -->
+      <g fill="#7dc97d">
+        <rect x="3" y="3" width="11" height="1"/>
+        <rect x="2" y="4" width="12" height="1"/>
+      </g>
+      <!-- Тёмная нижняя тень -->
+      <g fill="#3a7e3a">
+        <rect x="2" y="7" width="13" height="1"/>
+        <rect x="2" y="11" width="2" height="1"/>
+        <rect x="6" y="11" width="2" height="1"/>
+        <rect x="9" y="11" width="2" height="1"/>
+        <rect x="12" y="11" width="2" height="1"/>
+      </g>
+      <!-- Светлая полоса на пластинах -->
+      <g fill="#ffd2b3">
+        <rect x="4" y="0" width="1" height="1"/>
+        <rect x="7" y="0" width="1" height="1"/>
         <rect x="10" y="0" width="1" height="1"/>
-        <rect x="12" y="0" width="1" height="1"/>
-        <rect x="14" y="0" width="1" height="1"/>
-        <rect x="16" y="0" width="1" height="1"/>
-        <rect x="5" y="1" width="13" height="1"/>
-        <rect x="18" y="3" width="3" height="3"/>
-        <rect x="19" y="2" width="2" height="1"/>
-        <rect x="19" y="6" width="2" height="1"/>
       </g>
-      <g fill="#5fa05f">
-        <rect x="4" y="2" width="14" height="1"/>
-        <rect x="3" y="3" width="15" height="1"/>
-        <rect x="2" y="4" width="16" height="1"/>
-        <rect x="1" y="5" width="17" height="2"/>
-        <rect x="2" y="7" width="16" height="1"/>
-        <rect x="2" y="8" width="2" height="2"/>
-        <rect x="6" y="8" width="2" height="2"/>
-        <rect x="12" y="8" width="2" height="2"/>
-        <rect x="16" y="8" width="2" height="2"/>
+      <!-- Свет на хвостовой булаве -->
+      <g fill="#ffd2b3">
+        <rect x="13" y="4" width="1" height="1"/>
+        <rect x="14" y="4" width="1" height="1"/>
       </g>
-      <g fill="#82c47a">
-        <rect x="4" y="3" width="13" height="1"/>
-      </g>
-      <g fill="#3d7a3d">
-        <rect x="2" y="6" width="15" height="1"/>
-      </g>
+      <!-- Глаз -->
       <g fill="#1a1a1a">
         <rect x="2" y="5" width="1" height="1"/>
+      </g>
+      <!-- Маленькая улыбка -->
+      <g fill="#1a1a1a">
+        <rect x="1" y="6" width="2" height="1"/>
       </g>
     </svg>
   </div>
   <div class="dino-wrap daria">
-    <svg viewBox="0 0 14 16" width="56" height="64" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges">
-      <g fill="#4a8eb3">
-        <rect x="10" y="0" width="3" height="1"/>
-        <rect x="9" y="1" width="5" height="1"/>
-        <rect x="8" y="2" width="6" height="3"/>
-        <rect x="10" y="5" width="2" height="1"/>
-        <rect x="7" y="5" width="3" height="1"/>
-        <rect x="6" y="6" width="5" height="1"/>
-        <rect x="5" y="7" width="6" height="1"/>
-        <rect x="3" y="8" width="8" height="1"/>
-        <rect x="1" y="9" width="10" height="1"/>
-        <rect x="0" y="10" width="10" height="1"/>
-        <rect x="6" y="10" width="2" height="1"/>
-        <rect x="6" y="11" width="1" height="1"/>
+    <svg viewBox="0 0 14 16" width="84" height="96" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges">
+      <!-- Дарья: LEGO-style ти-рекс (стоит, большая голова, маленькие ручки) -->
+      <!-- Голова -->
+      <g fill="#5ba8c8">
+        <rect x="8" y="0" width="5" height="1"/>
+        <rect x="7" y="1" width="7" height="1"/>
+        <rect x="7" y="2" width="7" height="3"/>
+        <!-- Челюсть -->
+        <rect x="9" y="5" width="4" height="1"/>
+        <!-- Шея -->
+        <rect x="6" y="5" width="3" height="1"/>
+        <rect x="5" y="6" width="4" height="1"/>
+      </g>
+      <!-- Тело -->
+      <g fill="#5ba8c8">
+        <rect x="3" y="7" width="7" height="1"/>
+        <rect x="1" y="8" width="9" height="1"/>
+        <rect x="0" y="9" width="9" height="2"/>
+        <!-- Ножки -->
         <rect x="3" y="11" width="2" height="3"/>
-        <rect x="7" y="11" width="2" height="3"/>
+        <rect x="6" y="11" width="2" height="3"/>
         <rect x="3" y="14" width="3" height="1"/>
         <rect x="6" y="14" width="3" height="1"/>
+        <!-- Маленькие ручки -->
+        <rect x="6" y="9" width="1" height="2"/>
       </g>
-      <g fill="#7cb5d6">
-        <rect x="10" y="1" width="2" height="1"/>
-        <rect x="9" y="2" width="3" height="1"/>
-        <rect x="3" y="8" width="6" height="1"/>
-        <rect x="2" y="9" width="6" height="1"/>
+      <!-- Светлый блик сверху (LEGO-плёнка света) -->
+      <g fill="#8ed0e0">
+        <rect x="8" y="1" width="3" height="1"/>
+        <rect x="7" y="2" width="4" height="1"/>
+        <rect x="3" y="7" width="6" height="1"/>
+        <rect x="2" y="8" width="6" height="1"/>
       </g>
-      <g fill="#3a6e8c">
+      <!-- Тёмная нижняя тень -->
+      <g fill="#3a7d96">
         <rect x="0" y="10" width="9" height="1"/>
+        <rect x="3" y="13" width="2" height="1"/>
+        <rect x="6" y="13" width="2" height="1"/>
       </g>
+      <!-- Зубы -->
       <g fill="#ffffff">
-        <rect x="12" y="4" width="1" height="1"/>
-        <rect x="13" y="4" width="1" height="1"/>
         <rect x="11" y="5" width="1" height="1"/>
+        <rect x="12" y="4" width="1" height="1"/>
       </g>
+      <!-- Глаз -->
       <g fill="#1a1a1a">
-        <rect x="10" y="3" width="1" height="1"/>
+        <rect x="9" y="3" width="1" height="1"/>
+      </g>
+      <!-- Блик в глазу -->
+      <g fill="#ffffff">
+        <rect x="9" y="3" width="1" height="1" opacity="0"/>
       </g>
     </svg>
   </div>
