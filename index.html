@@ -321,17 +321,24 @@
     -webkit-tap-highlight-color: transparent;
   }
   .widget-btns a:hover, .widget-btns button:hover { background: var(--accent); }
-  #map-frame { width: 100%; flex: 1; border: none; display: block; }
-  #map-svg { width: 100%; flex: 1; display: block; background: #ede0c4; }
-  #map-svg .street { stroke: #5c4830; stroke-width: 0.8; fill: none; opacity: 0.55; }
-  #map-svg .ring { stroke: #5c4830; stroke-width: 1.2; fill: none; opacity: 0.6; }
-  #map-svg .river { stroke: #7a9aab; stroke-width: 5; fill: none; stroke-linecap: round; opacity: 0.65; }
-  #map-svg .route { stroke: #d62916; stroke-width: 1.6; fill: none; stroke-dasharray: 3 2; stroke-linecap: round; stroke-linejoin: round; }
-  #map-svg .marker { cursor: pointer; }
-  #map-svg .marker circle { fill: #d62916; stroke: #ede0c4; stroke-width: 0.8; }
-  #map-svg .marker text { font-family: 'Mono', monospace; font-size: 4.5px; font-weight: 700; fill: #ede0c4; text-anchor: middle; pointer-events: none; }
-  #map-svg .label { font-family: 'Mono', monospace; font-size: 4.5px; fill: #5c4830; opacity: 0.7; pointer-events: none; }
-  #map-svg .caption { font-family: 'Mono', monospace; font-size: 5px; fill: #5c4830; opacity: 0.55; }
+  #map-frame {
+    width: 100%; flex: 1; border: none; display: block;
+    /* Винтажный фильтр для Яндекс-карты */
+    filter: sepia(0.55) hue-rotate(-12deg) brightness(0.95) contrast(1.05) saturate(0.85);
+  }
+  #map-widget::after {
+    content: '';
+    position: absolute;
+    left: 0; right: 0;
+    top: 36px; bottom: 0;
+    pointer-events: none;
+    background:
+      radial-gradient(ellipse at 30% 20%, transparent 50%, rgba(140, 100, 60, 0.18) 100%),
+      repeating-linear-gradient(45deg, transparent 0, transparent 3px, rgba(120, 90, 60, 0.025) 4px);
+    mix-blend-mode: multiply;
+  }
+  /* Скрываем дино во время полноэкранной карты */
+  #map-widget.expanded ~ .dinos { display: none; }
 
   .card.branch-b1:target, .card.branch-b1.active { border-color: #8e44ad; box-shadow: 0 0 0 1px #8e44ad; }
   .card.branch-b2:target, .card.branch-b2.active { border-color: #a04060; box-shadow: 0 0 0 1px #a04060; }
@@ -650,13 +657,43 @@
   @media (prefers-reduced-motion: reduce) {
     .dino-wrap { animation: none !important; }
   }
-  /* Толчок при принятии приглашения */
+  /* Толчок при принятии — оба динозавра становятся слева и толкают экран вправо */
   .dino-wrap.shoving {
     animation: none !important;
-    transition: transform .8s cubic-bezier(.5,0,.75,0);
+    transition: transform .6s ease-out;
+    z-index: 9100;   /* поверх invite-screen */
   }
-  .dino-wrap.ilya.shoving { transform: translateX(120vw); }
-  .dino-wrap.daria.shoving { transform: translateX(120vw); }
+  .dino-wrap.ilya.shoving { transform: translateX(50px) translateY(-5px); }
+  .dino-wrap.daria.shoving { transform: translateX(calc(-100vw + 150px)) translateY(-5px); }
+  .dino-wrap.shoving.pushing { transition: transform .35s ease-in; }
+  .dino-wrap.ilya.shoving.pushing { transform: translateX(80px) translateY(-10px); }
+  .dino-wrap.daria.shoving.pushing { transform: translateX(calc(-100vw + 180px)) translateY(-10px); }
+  /* Сирень в подарок */
+  .lilac-gift-svg {
+    position: absolute;
+    width: 18px; height: 28px;
+    pointer-events: none;
+    opacity: 0;
+  }
+  .dino-wrap.ilya .lilac-gift-svg {
+    top: 8px; right: 60px;
+    transform: rotate(-12deg);
+    animation: lilac-ilya 28s ease-in-out infinite 6s;
+  }
+  .dino-wrap.daria .lilac-gift-svg {
+    top: 30px; left: -2px;
+    transform: rotate(8deg);
+    animation: lilac-daria 28s ease-in-out infinite 6s;
+  }
+  @keyframes lilac-ilya {
+    0%, 73% { opacity: 0; }
+    77%, 86% { opacity: 1; }
+    89%, 100% { opacity: 0; }
+  }
+  @keyframes lilac-daria {
+    0%, 87% { opacity: 0; }
+    90%, 100% { opacity: 1; }
+  }
 
   @media (max-width: 820px) {
     .wrap { padding: 20px 16px 80px; }
@@ -888,61 +925,14 @@
 
 <div id="map-widget">
   <div class="widget-header">
-    <div class="label"><span class="dot-live"></span>план местности</div>
+    <div class="label"><span class="dot-live"></span>Яндекс.Карты</div>
     <div class="widget-btns">
+      <a id="btn-open" href="#" target="_blank" title="Открыть полную карту">↗</a>
       <button id="btn-expand" title="Развернуть">⛶</button>
       <button id="btn-collapse" title="Свернуть">—</button>
     </div>
   </div>
-  <svg id="map-svg" viewBox="0 0 220 340" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg">
-    <defs>
-      <filter id="paper-grain" x="0" y="0" width="100%" height="100%">
-        <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" stitchTiles="stitch"/>
-        <feColorMatrix values="0 0 0 0 0.4  0 0 0 0 0.32  0 0 0 0 0.18  0 0 0 0.1 0"/>
-      </filter>
-    </defs>
-    <rect width="220" height="340" fill="#ede0c4"/>
-    <rect width="220" height="340" filter="url(#paper-grain)"/>
-
-    <!-- Москва-река (волна на юге) -->
-    <path class="river" d="M -10 305 Q 30 295 70 308 Q 110 320 150 305 Q 190 295 230 305"/>
-
-    <!-- Бульварное кольцо (плавная дуга через карту) -->
-    <path class="ring" d="M 60 235 Q 75 200 100 175 Q 130 145 160 110 Q 180 75 195 45"/>
-
-    <!-- Садовое кольцо (внешний контур) -->
-    <path class="ring" d="M 30 280 L 30 250 Q 30 200 50 160 Q 75 110 110 70 Q 145 35 195 30" stroke-dasharray="2 2"/>
-
-    <!-- Остоженка / Пречистенка (параллельные линии с юга на северо-восток) -->
-    <path class="street" d="M 40 285 Q 70 260 110 220 Q 130 195 145 170"/>
-    <path class="street" d="M 35 280 Q 65 250 100 215 Q 125 190 140 165"/>
-
-    <!-- Большая Никитская -->
-    <path class="street" d="M 130 145 Q 145 130 165 95"/>
-
-    <!-- Поварская -->
-    <path class="street" d="M 100 175 Q 115 145 140 115 Q 145 105 155 95"/>
-
-    <!-- Тверская (вертикальная) -->
-    <path class="street" d="M 175 35 Q 168 80 162 120 Q 158 165 152 200"/>
-
-    <!-- Гоголевский → Никитский → Тверской (бульварное кольцо детальнее) -->
-    <!-- Подписи -->
-    <text class="label" x="50" y="295" transform="rotate(-30 50 295)">Москва-река</text>
-    <text class="label" x="105" y="265">Остоженка</text>
-    <text class="label" x="80" y="240">Пречистенка</text>
-    <text class="label" x="115" y="180">Поварская</text>
-    <text class="label" x="155" y="135" transform="rotate(45 155 135)">Б. Никитская</text>
-    <text class="label" x="180" y="55" transform="rotate(60 180 55)">Тверская</text>
-
-    <!-- Caption -->
-    <text class="caption" x="8" y="332">МОСКВА · МАЙ 2026</text>
-    <text class="caption" x="200" y="14">N ↑</text>
-
-    <!-- Route + markers (generated dynamically) -->
-    <g id="map-route"></g>
-    <g id="map-markers"></g>
-  </svg>
+  <iframe id="map-frame" src=""></iframe>
 </div>
 
 <div class="dinos" aria-hidden="true">
@@ -987,6 +977,23 @@
       <path d="M 7 45 Q 11 47 16 44" stroke="#1a1a1a" stroke-width="1.3" fill="none" stroke-linecap="round"/>
       <!-- Щёчка -->
       <circle cx="22" cy="47" r="2.5" fill="#ff9b6e" opacity="0.45"/>
+    </svg>
+    <!-- Сирень в подарок (Илья несёт) -->
+    <svg class="lilac-gift-svg" viewBox="0 0 16 26" xmlns="http://www.w3.org/2000/svg">
+      <path d="M 8 26 L 8 14" stroke="#5d6e3e" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+      <ellipse cx="3" cy="22" rx="3" ry="1.5" fill="#7a8d54" transform="rotate(-25 3 22)"/>
+      <g fill="#5a3070" opacity="0.9">
+        <circle cx="8" cy="3" r="2.2"/><circle cx="5" cy="5" r="2.2"/><circle cx="11" cy="5" r="2.2"/>
+        <circle cx="6" cy="8" r="2.2"/><circle cx="10" cy="8" r="2.2"/>
+        <circle cx="8" cy="11" r="2.2"/>
+      </g>
+      <g fill="#9560a8">
+        <circle cx="8" cy="3" r="1.4"/><circle cx="5" cy="5" r="1.4"/><circle cx="11" cy="5" r="1.4"/>
+        <circle cx="8" cy="8" r="1.4"/>
+      </g>
+      <g fill="#c98ac8">
+        <circle cx="8" cy="3" r="0.7"/><circle cx="6" cy="5" r="0.6"/><circle cx="9" cy="7" r="0.6"/>
+      </g>
     </svg>
   </div>
   <div class="dino-wrap daria">
@@ -1066,6 +1073,23 @@
       <ellipse cx="44" cy="97" rx="8" ry="2" fill="#1a1a1a" opacity="0.4"/>
       <!-- Щёчка -->
       <circle cx="46" cy="22" r="2.8" fill="#ff8a80" opacity="0.4"/>
+    </svg>
+    <!-- Сирень в подарок (Дарья получила) -->
+    <svg class="lilac-gift-svg" viewBox="0 0 16 26" xmlns="http://www.w3.org/2000/svg">
+      <path d="M 8 26 L 8 14" stroke="#5d6e3e" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+      <ellipse cx="3" cy="22" rx="3" ry="1.5" fill="#7a8d54" transform="rotate(-25 3 22)"/>
+      <g fill="#5a3070" opacity="0.9">
+        <circle cx="8" cy="3" r="2.2"/><circle cx="5" cy="5" r="2.2"/><circle cx="11" cy="5" r="2.2"/>
+        <circle cx="6" cy="8" r="2.2"/><circle cx="10" cy="8" r="2.2"/>
+        <circle cx="8" cy="11" r="2.2"/>
+      </g>
+      <g fill="#9560a8">
+        <circle cx="8" cy="3" r="1.4"/><circle cx="5" cy="5" r="1.4"/><circle cx="11" cy="5" r="1.4"/>
+        <circle cx="8" cy="8" r="1.4"/>
+      </g>
+      <g fill="#c98ac8">
+        <circle cx="8" cy="3" r="0.7"/><circle cx="6" cy="5" r="0.6"/><circle cx="9" cy="7" r="0.6"/>
+      </g>
     </svg>
   </div>
 </div>
@@ -1512,34 +1536,29 @@ function activePoints() {
   return pts;
 }
 
-const MAP_BOUNDS = { minLng: 37.580, maxLng: 37.615, minLat: 55.730, maxLat: 55.770 };
-function mapProject(lat, lng) {
-  const x = (lng - MAP_BOUNDS.minLng) / (MAP_BOUNDS.maxLng - MAP_BOUNDS.minLng) * 220;
-  const y = (MAP_BOUNDS.maxLat - lat) / (MAP_BOUNDS.maxLat - MAP_BOUNDS.minLat) * 340;
-  return { x, y };
+function buildYandexEmbed(points, focusPoint) {
+  if (!points.length) points = PREFIX;
+  const pt = points.map((p, i) => `${p.lng},${p.lat},pm2rdl${i+1}`).join('~');
+  const center = focusPoint || points[Math.floor(points.length / 2)];
+  const z = focusPoint ? 17 : 14;
+  return `https://yandex.ru/map-widget/v1/?ll=${center.lng}%2C${center.lat}&z=${z}&pt=${pt}&l=map`;
+}
+
+function buildYandexFull(points) {
+  if (!points.length) points = PREFIX;
+  const pt = points.map((p, i) => `${p.lng},${p.lat},pm2rdl${i+1}`).join('~');
+  const rtext = points.map(p => `${p.lat},${p.lng}`).join('~');
+  return `https://yandex.ru/maps/?pt=${pt}&rtext=${rtext}&rtt=pd`;
 }
 
 function refreshMap(focusPoint) {
   const pts = activePoints();
-  const route = document.getElementById('map-route');
-  const markers = document.getElementById('map-markers');
-  if (!route || !markers || !pts.length) return;
-  const proj = pts.map(p => mapProject(p.lat, p.lng));
-  // Smooth route as polyline
-  const d = proj.map((p, i) => `${i === 0 ? 'M' : 'L'} ${p.x.toFixed(1)} ${p.y.toFixed(1)}`).join(' ');
-  route.innerHTML = `<path class="route" d="${d}"/>`;
-  // Markers with numbers
-  let mh = '';
-  pts.forEach((p, i) => {
-    const xy = proj[i];
-    const isFocus = focusPoint && focusPoint.n === p.n && focusPoint.lat === p.lat;
-    const r = isFocus ? 6 : 4.5;
-    mh += `<g class="marker" data-n="${p.n}">
-      <circle cx="${xy.x.toFixed(1)}" cy="${xy.y.toFixed(1)}" r="${r}"/>
-      <text x="${xy.x.toFixed(1)}" y="${(xy.y + 1.6).toFixed(1)}">${p.n}</text>
-    </g>`;
-  });
-  markers.innerHTML = mh;
+  const frame = document.getElementById('map-frame');
+  if (!frame) return;
+  const newSrc = buildYandexEmbed(pts, focusPoint);
+  if (frame.src !== newSrc) frame.src = newSrc;
+  const open = document.getElementById('btn-open');
+  if (open) open.href = buildYandexFull(pts);
 }
 
 function focusCard(kind, n) {
@@ -1664,15 +1683,23 @@ if (localStorage.getItem('invite-accepted') === '1') {
 
 btnAccept.addEventListener('click', () => {
   localStorage.setItem('invite-accepted', '1');
-  // Динозавры толкают экран в сторону
-  document.querySelector('.dino-wrap.ilya')?.classList.add('shoving');
-  document.querySelector('.dino-wrap.daria')?.classList.add('shoving');
-  setTimeout(() => { inviteScreen.classList.add('pushed'); }, 200);
+  const ilya = document.querySelector('.dino-wrap.ilya');
+  const daria = document.querySelector('.dino-wrap.daria');
+  // Стадия 1: оба идут к левому краю — становятся возле экрана
+  ilya?.classList.add('shoving');
+  daria?.classList.add('shoving');
+  // Стадия 2: толкают экран — экран уезжает вправо
+  setTimeout(() => {
+    ilya?.classList.add('pushing');
+    daria?.classList.add('pushing');
+    inviteScreen.classList.add('pushed');
+  }, 650);
+  // Стадия 3: экран спрятан, динозавры возвращаются в своё движение
   setTimeout(() => {
     inviteScreen.style.display = 'none';
-    document.querySelector('.dino-wrap.ilya')?.classList.remove('shoving');
-    document.querySelector('.dino-wrap.daria')?.classList.remove('shoving');
-  }, 1300);
+    ilya?.classList.remove('shoving', 'pushing');
+    daria?.classList.remove('shoving', 'pushing');
+  }, 1700);
 });
 
 const ESCAPE_PHRASES = [
